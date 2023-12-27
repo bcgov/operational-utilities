@@ -1,0 +1,7 @@
+# Format: Gitea_Org, Gitea_Repo, GitHub_Org,GitHub_Repo,GitHub_ServiceAccount[Optional]
+# * Will grant Read access to the GutHub_ServiceAccount if the account is listed.,,,,
+# ** Lines start with # are commented out,,,,
+team-one,application-one,my-org,team-one-application-one,service-account-team-one
+team-one,application-two,my-org,team-one-application-two,service-account-team-one
+#team-two,utility-one,my-org,team-two-utility-one,service-account-team-two
+team-two,app-one,my-org,team-two-app-one,service-account-team-two
