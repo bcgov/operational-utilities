@@ -1,5 +1,5 @@
 # Gitea-to-Git-Migration
-Scripts for batch migrating Gitea repos to GitHub, or download Gitea repos to your local drive.
+Scripts for batch migrating Gitea repos to GitHub and granting **Read** access to a team account, or download Gitea repos to your local drive.
 
 ## Scripting Requirements
 Software:
