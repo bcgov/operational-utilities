@@ -1,0 +1,40 @@
+#~------Begin of Original Sample Text------
+#~INCLUDE PYTHON
+#~def ParamFunc():
+#~import myModule
+#~...
+#~END_PYTHON="import&lt;space&gt;myModule&lt;lf&gt;..."
+#~...
+#~file_list=myModule.files.name
+#~source_dir=myModule.sourceDirectory.name
+#~source_dir_list=myModule.sourceDirectoryList.name
+#~...
+#~------End of Original Sample text------
+#~
+#~------Begin of string replacement------
+#~Using '\' to escape special characters.
+#~insert a new line 'import fme' and insert 'from myPackage ' in front of import myModule.
+m~Func():\n  import myModule~Func():\n  import fme\n  from myPackage import myModule
+s~\"import\&lt;space\&gt;myModule\&lt;~\"import\&lt;space\&gt;fme\&lt;lf\&gt;from\&lt;space\&gt;myPackage\&lt;space\&gt;import\&lt;space\&gt;myModule\&lt;
+#~Fix fme macro reference: FME_MacroValues~fme.macroValues
+s~FME_MacroValues~fme.macroValues
+s~\.files\.~\.FILES\.
+#~a subset of a string must be processed after the full string
+s~sourceDirectoryList~SOURCE_DIRECTORY_LIST
+s~sourceDirectory~SOURCE_DIRECTORY
+#~
+#~------End of string replacement------
+#~
+#~------Begin of Processed Sample Text------
+#~INCLUDE PYTHON
+#~def ParamFunc():
+#~import fme
+#~from myPackage import myModule
+#~...
+#~END_PYTHON="import&lt;space&gt;fme&lt;lf&gt;from&lt;space&gt;myPackage&lt;space&gt;import&lt;space&gt;myModule&lt;lf&gt;..."
+#~...
+#~file_list=myModule.FILES.name
+#~source_dir=myModule.SOURCE_DIRECTORY.name
+#~source_dir_list=myModule.SOURCE_DIRECTORY_LIST.name
+#~...
+#~------End of Processed Sample text------
