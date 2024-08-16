@@ -1,7 +1,7 @@
 #!/bin/bash
 # Usage: ./replaceStrings.sh [Options] [input.txt]
-# [input.txt]: text file with oprationType~oldString~newString per line
-# Replace oldString with newString in all file with extension [.file_extension]
+# [input.txt]: text file with "[operation type]~[old string]~[new string]" per line
+# Replace [old string] with [new string] in all file with extension [.file_extension]
 # in a directory and its sub directories
 
 iOpt=$#
@@ -15,16 +15,16 @@ function _usage()
 {
 	### Usage ###
 	cat <<EOF
-		Usage: parameterTest.sh [Options] [Input File]
+		Usage: replaceStrings.sh [Options] [Input File]
 		Search through a directory supplied (defaults to current directory) and its sub directories,
 		find file with the extension supplied (defaults to .html),
-		replace oldString with newString listed in [Input File].
-		[Input File] contains a list of multilineIndicator~oldString~newString per line,
+		replace [old string] with [new string] listed in [Input File].
+		[Input File] contains a list of "[operation type]~[old string]~[new string]" per line,
 		where '~' is the default delimiter. You may specify your own delimiter by using the -l option.
-		multilineIndicator:
-		'm' for multipleline replacing,
-		's' for single line replacing,
-		'#' skip the line.
+		[operation type]:
+			'm' for multipleline replacing,
+			's' for single line replacing,
+			'#' skip the line.
 		
 		
 		Options:
