@@ -53,6 +53,11 @@ function Get-JsonDepth {
     return $JsonDepth
 }
 
+function Get-Timestamp {
+    $strTimestamp = Get-Date -Format "yyyy-MM-dd-HHmm-ssffff"
+    return $strTimestamp
+}
+
 function Get-TokenString {
     param (
         [string]$token
