@@ -5,6 +5,6 @@ A set of Powershell scripts to access FME REST API version 3.
 - Set Schedules: Read FME Schedules from a JSON file, and write schedule items back to FME.
 - Update Schedules: Read current FME Schedules, apply global changes and then write back to FME.
 - Get Users: Download FME Users (Accounts) in JSON format through FME API. [Get_FMEUsers.ps1](https://github.com/bcgov/operational-utilities/blob/main/fme-rest-api-v3-tools/Get_FMEUsers.ps1)
-- Get LDAP Users: Download FME LDAP Users in JSON format through FME API. The `"server"` field in the output JSON file is the `Name` of the `Authentication Services` in FME Flow (Server) under `ADMIN -> User Management -> Authentication Services`. [Get_FMELdapUsers.ps1](https://github.com/bcgov/operational-utilities/blob/main/fme-rest-api-v3-tools/Get_FMELdapUsers.ps1)
+- Get LDAP Users: Download FME LDAP Users in JSON format through FME API. The `"server"` field in the output JSON file is the `Name` of the `Authentication Services` in FME Flow (Server) under `ADMIN -> User Management -> Authentication Services -> Name`. [Get_FMELdapUsers.ps1](https://github.com/bcgov/operational-utilities/blob/main/fme-rest-api-v3-tools/Get_FMELdapUsers.ps1)
 - Get User Roles: Download FME User Roles in JSON format through FME API. [Get_FMEUserRoles.ps1](https://github.com/bcgov/operational-utilities/blob/main/fme-rest-api-v3-tools/Get_FMEUserRoles.ps1)
 - Set User Roles: Read FME User Roles from a JSON file, and write the items back to FME.
