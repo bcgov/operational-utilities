@@ -1,4 +1,8 @@
+## FME-REST-API-V3-Tools
 A set of Powershell scripts to access FME REST API version 3.
+### In Windows, set the policy to enable PS Scripts
+`PS C:\> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`
+### List of scripts
 - Common supporting functions: [FME_RestAPI_Common.psm1](https://github.com/bcgov/operational-utilities/blob/main/fme-rest-api-v3-tools/FME_RestAPI_Common.psm1)
 - Get Repositories: Download FME Repositories in JSON format through FME API. [Get_FMERepositories.ps1](https://github.com/bcgov/operational-utilities/blob/main/fme-rest-api-v3-tools/Get_FMERepositories.ps1)
 - Get Schedules: Download FME Schedules in JSON format through FME API. [fme-rest-api-v3-tools/Get_FMESchedules.ps1](https://github.com/bcgov/operational-utilities/blob/main/fme-rest-api-v3-tools/Get_FMESchedules.ps1)
