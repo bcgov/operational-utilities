@@ -48,4 +48,4 @@ replace [old string] with [new string] listed in [Input File].
                 n~\(Func():\n\)\([ ]*\)import~\1\2import fme\n\2import~Func():\n[ ]*import fme
                 #~where \1 is 'Func():\n', and \2 is [ ]* or any spaces before 'import'.
 
-[replaceStringsSampleList.txt](https://github.com/xieshihua/utilities/blob/main/replace-string-in-file/replaceStringsSampleList.txt)
+[replaceStringsSampleList.txt](https://github.com/bcgov/operational-utilities/blob/main/replace-string-in-files/replaceStringsSampleList.txt)
