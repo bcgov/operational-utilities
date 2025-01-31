@@ -11,7 +11,7 @@ You must have **Write** access to your local drive, and the local drive has suff
 
 ## Preparation
 
-### Set the policy to enable PS Scripts
+### In Windows, set the policy to enable PS Scripts
 `PS C:\> Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`
 
 ### To be authenticated to GitHub and Gitea before using the batch processing scripts
