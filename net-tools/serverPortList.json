@@ -1,0 +1,14 @@
+{   
+    "defaultPorts": ["1002", "1005", "1100-1113", "1521"],
+    "comments": [
+        "Ports can be a specific port (eg. 1007) or a range of ports (eg. 1100-1103)",
+        "defaultPorts are used if a specific server's ports field is blank []",
+        "Specify ports for a specific server to override the default ports."
+    ],
+    "Servers": [
+        {"name": "server_1.domain_1", "ports": ["5438"]},
+        {"name": "www.some_site.com", "ports": []},
+        {"name": "some_host", "ports": []},
+        {"name": "server_2.domain_1", "ports": ["1007", "2200-2203", "5521"]}
+    ]
+}
