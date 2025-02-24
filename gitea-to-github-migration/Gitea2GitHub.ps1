@@ -79,10 +79,11 @@ foreach ($line in $file) {
 		# Get Gitea repo
         $repo= "$GiteaWebsite/$giteaOrg/$giteaRepo.git"
         $ts=Get-Timestamp
-        Write-Host "$ts download_repo: git clone --mirror $repo"
 		if ($Mirror) {
+  			Write-Host "$ts download_repo: git clone --mirror $repo"
 			git clone --mirror $repo
 		} else {
+  			Write-Host "$ts download_repo: git clone $repo"
 			git clone $repo
 		}
         if ($?) {
@@ -98,17 +99,20 @@ foreach ($line in $file) {
             # Create github repo and grant $GitServiceAccount Read access to the repo
             $repo="$GitOrg/$gitRepo"
             $ts=Get-Timestamp
-            Write-Host "$ts create_github_repo: gh repo create $repo --private --team `"$GitServiceAccount`" --description `"$desc`""
             if ($GitServiceAccount -eq "") {
                 if ($desc -eq "") {
+		    Write-Host "$ts create_github_repo: gh repo create $repo --private"
                     gh repo create $repo --private 
                 } else {
+		    Write-Host "$ts create_github_repo: gh repo create $repo --private --description `"$desc`""
                     gh repo create $repo --private --description "$desc"
                 }
             } else {
                 if ($desc -eq "") {
-                    gh repo create $repo --private --team "$GitServiceAccount"
+        	    Write-Host "$ts create_github_repo: gh repo create $repo --private --team `"$GitServiceAccount`""
+	            gh repo create $repo --private --team "$GitServiceAccount"
                 } else {
+		    Write-Host "$ts create_github_repo: gh repo create $repo --private --team `"$GitServiceAccount`" --description `"$desc`""
                     gh repo create $repo --private --team "$GitServiceAccount" --description "$desc"
                 }
             }
@@ -116,10 +120,11 @@ foreach ($line in $file) {
             # Clone to github
             $repo="https://github.com/$GitOrg/$gitRepo"
             $ts=Get-Timestamp
-            Write-Host "$ts push to github repo: git push --mirror $repo"
 			if ($Mirror) {
+   				Write-Host "$ts push to github repo: git push --mirror $repo"
 				git push --mirror $repo
 			} else {
+   				Write-Host "$ts push to github repo: git push $repo"
 				git push $repo
 			}
 
