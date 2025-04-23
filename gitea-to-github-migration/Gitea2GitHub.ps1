@@ -1,6 +1,6 @@
 <# Gitea2GitHub.ps1
 # Purpose: Batch migrating Gitea repos to github based on the list in a CSV file.
-# Usage: .\Gitea2GitHub.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -RepoSuffix [Optional github repo suffix] -Mirror [Optional $true or $false]
+# Usage: .\Gitea2GitHub.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -RepoSuffix [Optional github repo suffix] -Mirror [optional $true/$false]
 #
 # * GiteaRepoList.csv is a comma separated value file with five tuples per row:
 # *      Gitea_Org, Gitea_Repo, GitHub_Org, GitHub_Repo, (Optional)GitHub_ServiceAccount
