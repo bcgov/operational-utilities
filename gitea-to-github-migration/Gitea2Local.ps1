@@ -1,6 +1,6 @@
 <# Gitea2Local.ps1
 # Purpose: Batch download Gitea repos to your local drive based on the list in a CSV file.
-# Usage: .\Gitea2Local.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -Mirror [true/false]
+# Usage: .\Gitea2Local.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -Mirror [optional $true/$false]
 # * GiteaRepoList is a comma separated value file with two tuples per row: gitea_org, gitea_repo. If the file has more than two tuples, the rest tuples are ignored.
 # ** Use '#' to comment out lines in GiteaRepoList.csv
 # *** If Readme.md is missing from a repo, the script will create one based on the gitea repo description.
