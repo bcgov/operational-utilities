@@ -54,7 +54,7 @@ Use your Gitea user ID and the token generated from your Gitea as the password f
 
 **Usage:**
 
-`.\Gitea2Local.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv]`
+`.\Gitea2Local.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -Mirror [true/false]`
 GiteaRepoList.csv is a comma separated value file with two tuples per row: 
 <br>&nbsp;&nbsp;&nbsp;*gitea_org, gitea_repo*<br>
 If the file has more than two tuples, the rest tuples are ignored.
