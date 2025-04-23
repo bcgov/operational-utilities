@@ -1,6 +1,6 @@
 <# Gitea2Local.ps1
 # Purpose: Batch download Gitea repos to your local drive based on the list in a CSV file.
-# Usage: .\Gitea2Local.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv]
+# Usage: .\Gitea2Local.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -Mirror [true/false]
 # * GiteaRepoList is a comma separated value file with two tuples per row: gitea_org, gitea_repo. If the file has more than two tuples, the rest tuples are ignored.
 # ** Use '#' to comment out lines in GiteaRepoList.csv
 # *** If Readme.md is missing from a repo, the script will create one based on the gitea repo description.
@@ -12,7 +12,8 @@ param (
     $GiteaWebsite = $(throw "GiteaWebsite is required."),
     $GiteaUser = $(throw "GiteaUser is required."),
     $GiteaToken = $(throw "Giteatoken is required."),
-    $GiteaRepoList = ".\Gitea_repo_list.txt"
+    $GiteaRepoList = ".\Gitea_repo_list.txt",
+	$Mirror = $false
 )
 
 function Get-Timestamp() {
@@ -44,11 +45,17 @@ foreach ($line in $file) {
         $jsonData=Get-Content -Path $jsonFilePath | ConvertFrom-json
         $desc=$jsonData.description
         
+        # Get Gitea repo
         $repo= "$GiteaWebsite/$giteaOrg/$giteaRepo.git"
         $ts=Get-Timestamp
-        Write-Host "$ts download_repo: $repo"
-        #git clone --mirror "$GiteaWebsite/$giteaOrg/$giteaRepo.git" | Tee-Object -Variable cmdOutput
-        git clone --mirror $repo
+        if ($Mirror) {
+            #git clone --mirror "$GiteaWebsite/$giteaOrg/$giteaRepo.git" | Tee-Object -Variable cmdOutput
+            Write-Host "$ts download_repo: git clone --mirror $repo"
+            git clone --mirror $repo
+        } else {
+            Write-Host "$ts download_repo: git clone $repo"
+            git clone $repo
+        }
         #Test-Output -Msg $cmdOutput -File $logFile
 
         if ($?) {
