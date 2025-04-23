@@ -42,7 +42,7 @@ Use your Gitea user ID and the token generated from your Gitea as the password f
 
 **Usage:**
 
-`.\Gitea2GitHub.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -RepoSuffix [Optional github repo suffix] -Mirror [Optional $true or $false]`
+`.\Gitea2GitHub.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -RepoSuffix [Optional github repo suffix] -Mirror [Optional $true/$false]`
 - GiteaRepoList.csv is a comma separated value file with five tuples per row: <br>*Gitea_Org, Gitea_Repo, GitHub_Org, GitHub_Repo, (Optional)GitHub_ServiceAccount*
 - Use '#' to comment out lines in GiteaRepoList.csv
 - If GitHub_ServiceAccount is provided, the script will grant Read access to the account.
@@ -54,7 +54,7 @@ Use your Gitea user ID and the token generated from your Gitea as the password f
 
 **Usage:**
 
-`.\Gitea2Local.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -Mirror [true/false]`
+`.\Gitea2Local.ps1 -GiteaWebsite [https://your.gitea.com] -GiteaUser [Your user ID] -GiteaToken [Your Gitea token] -GiteaRepoList [GiteaRepoList.csv] -Mirror [optional $true/$false]`
 GiteaRepoList.csv is a comma separated value file with two tuples per row: 
 <br>&nbsp;&nbsp;&nbsp;*gitea_org, gitea_repo*<br>
 If the file has more than two tuples, the rest tuples are ignored.
