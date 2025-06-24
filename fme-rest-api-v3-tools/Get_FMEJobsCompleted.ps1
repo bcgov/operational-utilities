@@ -2,26 +2,30 @@
 Purpose:
 	Download FME Completed Jobs in JSON or CSV format through FME REST API V3.
 
+Dependencies:
+	o FME_RestAPI_Common.psm1
+
 Usage: 
 	o Short form:
 		Get_FMEJobsCompleted.ps1 http(s)://fmeserver abcd23er...32fg
 	o Long form:
 		Get_FMEJobsCompleted.ps1 -URL http(s)://fmeserver -token abcd23er...32fg -completedState [all/failed/success] -limit [integer] -offset [integer] -format [json/csv] -dataDir [Directory for Output] -LogFile [log file name]
 Parameters:
-	-URL: Mandatory. FME Server URL, eg. http://fmeserver.
-	-token: Mandatory. FME user token.
-	-completedState: Optional. Values: all/failed/success, defaults to "all".
-	-limit: Optional. Maximum number of records to extract. Value: integer, defaults to -1, which means all records.
-	-offset: Optional. Offset of the begining of the records to be extracted. Value: integer, defaults to 0.
-	-format: Optional. Export file format. Values: json/csv, defaults to "json".
-	-dataDir: Optional. Log and data file export directory, defaults to ".\data".
-	-LogFile: Optional. Log file name, defaults to "Get_FMEJobsCompleted.log".
+	-URL: Mandatory. FME Server URL. eg. -URL http://fmeserver
+	-token: Mandatory. FME user token. eg. -token abcd23er...32fg
+	-completedState: Optional. Values: all/failed/success, defaults to "all". eg. -completedState success
+	-limit: Optional. Maximum number of records to extract. Value: integer, defaults to -1, which means all records. eg. -limit 100
+	-offset: Optional. Offset of the begining of the records to be extracted. Value: integer, defaults to 0. eg. -offset 500
+	-format: Optional. Export file format. Values: json/csv, defaults to "json". eg. -format csv
+	-dataDir: Optional. Log and data file export directory, defaults to ".\data". eg. -dataDir C:\Data\Temp
+	-LogFile: Optional. Log file name, defaults to "Get_FMEJobsCompleted.log". eg. -LogFile MySession.log
 
 Comments:
 	o To enable PS Scripts, run the command below in a PowerShell window (you only need to do this once):
 		Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 	o Edit $sCols list to add/remove columns.
 	o If the script times out before retrieving all records, try to lower the value of Const_Limit (original value is 10000).
+	o Data is exported to the $dataDir\JobsCompleted_$timestamp.[json/csv]
 #>
 
 param (
