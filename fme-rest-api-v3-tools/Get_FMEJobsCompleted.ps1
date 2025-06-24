@@ -10,7 +10,7 @@ Parameters:
 	-URL: Mandatory. FME Server URL, eg. http://fmeserver.
 	-token: Mandatory. FME user token.
 	-completedState: Optional. Values: all/failed/success, defaults to "all".
-	-limit: Optional. Maximum number of records to extract. Value: integer, defaults to Const_Limit.
+	-limit: Optional. Maximum number of records to extract. Value: integer, defaults to -1, which means all records.
 	-offset: Optional. Offset of the begining of the records to be extracted. Value: integer, defaults to 0.
 	-format: Optional. Export file format. Values: json/csv, defaults to "json".
 	-dataDir: Optional. Log and data file export directory, defaults to ".\data".
