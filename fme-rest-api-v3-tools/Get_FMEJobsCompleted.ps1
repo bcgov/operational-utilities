@@ -7,7 +7,7 @@ Dependencies:
 
 Usage: 
 	o Short form:
-		Get_FMEJobsCompleted.ps1 http(s)://fmeserver abcd23er...32fg
+		Get_FMEJobsCompleted.ps1 http(s)://fmeserver abcd23er...32fg  -completedState [all/failed/success] -limit [integer] -offset [integer] -format [json/csv] -dataDir [Directory for Output] -LogFile [log file name]
 	o Long form:
 		Get_FMEJobsCompleted.ps1 -URL http(s)://fmeserver -token abcd23er...32fg -completedState [all/failed/success] -limit [integer] -offset [integer] -format [json/csv] -dataDir [Directory for Output] -LogFile [log file name]
 Parameters:
