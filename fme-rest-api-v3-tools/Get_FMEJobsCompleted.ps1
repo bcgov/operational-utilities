@@ -1,6 +1,7 @@
 <# Name: Get_FMEJobsCompleted.ps1
 Purpose:
 	Download FME Completed Jobs in JSON or CSV format through FME REST API V3.
+
 Usage: 
 	o Short form:
 		Get_FMEJobsCompleted.ps1 http(s)://fmeserver abcd23er...32fg
@@ -15,9 +16,12 @@ Parameters:
 	-format: Optional. Export file format. Values: json/csv, defaults to "json".
 	-dataDir: Optional. Log and data file export directory, defaults to ".\data".
 	-LogFile: Optional. Log file name, defaults to "Get_FMEJobsCompleted.log".
- 
-To enable PS Scripts, run the command below in a PowerShell window (you only need to do this once):
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+Comments:
+	o To enable PS Scripts, run the command below in a PowerShell window (you only need to do this once):
+		Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+	o Edit $sCols list to add/remove columns.
+	o If the script times out before retrieving all records, try to lower the value of Const_Limit (original value is 10000).
 #>
 
 param (
