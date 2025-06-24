@@ -1,6 +1,16 @@
 <# Name: FME_RestAPI3_Common.psm1
 # Purpose: Common FME Rest API Call Functions
-# Comment: FME REST API V3
+# Comment:
+#  - FME REST API Version: V3
+#  - Use of "offset" and "limit":
+#    * "offset":  -1 means not set. Offset starts from 0. The largest offset should be less than the "totalCount".
+#    * "limit":  -1 means not set. It sets the limit of number of items to retrieve. If it is too big, the script returns an error. In case of Jobs Completed, 10,000 is acceptable.
+#    * "totalCount":  47,304 is the total number of items.
+#    * "offset" and "limit" must be used together. Be aware that a same offset between two runs could point to different records since new records could be added since the last run.
+
+# Set the policy to enable PS Scripts:
+# Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
 #>
 
 New-Variable -Name ApiBase -Value "fmerest/v3/" -Option Constant
@@ -35,6 +45,8 @@ New-Variable -Name JsonDepth -Value 12 -Option Constant
 "security/categories"
 "security/ldap"
 "security/roles"
+"systemevents/events/completed"
+"transformations/jobs/completed"
 #>
 
 function Get-FMEClassURL {
