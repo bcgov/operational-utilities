@@ -7,9 +7,9 @@ Dependencies:
 
 Usage: 
 	o Short form:
-		Get_FMEJobsCompleted.ps1 http(s)://fmeserver abcd23er...32fg  -completedState [all/failed/success] -limit [integer] -offset [integer] -format [json/csv] -dataDir [Directory for Output] -LogFile [log file name]
+		Get_FMEJobsCompleted.ps1 http(s)://fmeserver abcd23er...32fg  -completedState [all/failed/success] -limit [integer] -offset [integer] -addColumns "request,description" -format [json/csv] -dataDir [Directory for Output] -LogFile [log file name]
 	o Long form:
-		Get_FMEJobsCompleted.ps1 -URL http(s)://fmeserver -token abcd23er...32fg -completedState [all/failed/success] -limit [integer] -offset [integer] -format [json/csv] -dataDir [Directory for Output] -LogFile [log file name]
+		Get_FMEJobsCompleted.ps1 -URL http(s)://fmeserver -token abcd23er...32fg -completedState [all/failed/success] -limit [integer] -offset [integer] -addColumns "request,description" -format [json/csv] -dataDir [Directory for Output] -LogFile [log file name]
 Parameters:
 	-URL: Mandatory. FME Server URL. eg. -URL http://fmeserver
 	-token: Mandatory. FME user token. eg. -token abcd23er...32fg
@@ -17,6 +17,10 @@ Parameters:
 	-limit: Optional. Maximum number of records to extract. Value: integer, defaults to -1, which means all records. eg. -limit 100
 	-offset: Optional. Offset of the begining of the records to be extracted. Value: integer, defaults to 0. eg. -offset 500
 	-format: Optional. Export file format. Values: json/csv, defaults to "json". eg. -format csv
+	-addColumns: Optional. Add extra columns to the output file.
+		Available columns: cpuTime, description, engineHost, numLines, numWarnings, request, timeDelivered
+		Default columns: id, sourceType, sourceName, repository, workspace, userName, engineName, status, numErrors, timeSubmitted, timeQueued, timeStarted, timeFinished, cpuPct, peakMemUsage, elapsedTime, result
+		eg. -addColumns "description,request"
 	-dataDir: Optional. Log and data file export directory, defaults to ".\data". eg. -dataDir C:\Data\Temp
 	-LogFile: Optional. Log file name, defaults to "Get_FMEJobsCompleted.log". eg. -LogFile MySession.log
 
@@ -36,6 +40,7 @@ param (
 	$completedState = "all",
 	$limit = -1,
 	$offset = -1,
+	$addColumns = "",
 	$format = "json",
     $dataDir = (Get-Location).Path + "\data",
     $LogFile = "Get_FMEJobsCompleted.log"
@@ -49,6 +54,8 @@ New-Variable -Name Const_Limit -Value 10000 -Option Constant
 # Available columns: 'request', 'timeDelivered', 'workspace', 'numErrors', 'numLines', 'engineHost', 'timeQueued', 'cpuPct', 'description', 'timeStarted', 'repository', 'userName', 'result', 'cpuTime', 'sourceType', 'id', 'sourceName', 'timeFinished', 'engineName', 'numWarnings', 'timeSubmitted', 'elapsedTime', 'peakMemUsage', 'status'
 # Add available columns to the column list below:
 $sCols = @('id', 'sourceType', 'sourceName', 'repository', 'workspace', 'userName', 'engineName', 'status', 'numErrors', 'timeSubmitted', 'timeQueued', 'timeStarted', 'timeFinished', 'cpuPct', 'peakMemUsage', 'elapsedTime', 'result')
+if ($addColumns.Length -gt 0) {$sCols += $addColumns.Split(",").Trim()}
+Write-Host $sCols
 
 function Get-TotalCount {
 	param (
