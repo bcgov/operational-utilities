@@ -11,13 +11,24 @@ This collection of scripts is used to query [FME Flow REST API V3](http://asellu
 ## Requirements
 
 - Python 3 and included libraries
+  - To install Python 3 follow the required process within [Python Downloads](https://www.python.org/downloads/)
+  - To set your environment correctly consider following the steps within [BeginnersGuide/Documentation](https://wiki.python.org/moin/BeginnersGuide/Download)
+  - Take note of your Python Command (Eg. `python3`)
 - Python additional library `xlsxwriter`
+  - To install this follow the required steps within [Getting Started with XlsxWriter](https://xlsxwriter.readthedocs.io/getting_started.html)
 - FME Flow REST API Token
   - This can be generated from any page within [FME Flow REST API V3](http://asellus.dmz/fmerest/apidoc/v3/#)
   - Access is restricted to VPN (or VPN2)
   - To generate the token use the `Get Token` button to the top left of the screen
     - This will require a valid Asellus FME Flow Account with permissions to API use
   - The token only lasts an hour and will need to be refreshed after that time
+
+## To Run
+
+1. Complete the steps in [Requirements](#Requirements)
+2. Navigate to this folder on your environment
+3. Run the script with your Python command
+   `python3 control.py`
 
 ## Directory
 
