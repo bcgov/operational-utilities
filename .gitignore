@@ -1,0 +1,7 @@
+## Used to keep undesired files from this GitHub Repository
+
+# Mac auto-generated files
+.DS_Store
+
+# Excel Files created by `fme-rest-api-vs-tools/get-failed-jobs` script
+fme-rest-api-vs-tools/get-failed-jobs/*.xlsx
