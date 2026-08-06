@@ -1,83 +1,113 @@
 ## CMD - Windows CMD batch scripts
-### `cmdTemplate.cmd` A template to process Windows CMD batch commends arguments.
+### `cmd_template.cmd` A template to process Windows CMD batch commends arguments.
 <pre>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Name: cmdTemplate.cmd
-Purpose: A template to process Windows CMD batch commends arguments.
-         * Please replace head sections with your own notes.
+*********************************************************************
+cmd_template.cmd: A template to process Windows CMD batch commends arguments.
+*********************************************************************
 
-Usage: cmdTemplate.cmd [/?] [/t or /T] arg1 arg2 arg3 ...
-       Optional: /? - Help
-       Optional: /t or /T - Test run or dry run.
+cmd_template.cmd [/?] [/t | /T] [[/p | /P]:Path] arg1 arg2 arg3 ...
 
-Example: The following command demos a test run with five auguments.
+  [/?]             Optional. Display the Help info, defaults to FALSE
+  [/t | /T]        Optional. Test run or dry run, defaults to FALSE
+  [[/p | /P]:Path] Optional. Path to a directory. e.g. /P:C:\dvlp\temp. Defaults to [Path_to_Check].
+  arg1             The first argument.
+  arg2             The second argument.
+  arg3             The third argument.
 
-  C:\dvlp>cmdTemplate.cmd arg1 arg2 arg3 arg4 arg5 /t
+Example 1: The following command demos a [Test] run with 5 auguments, and to show the command of listing the content of the default folder set by [Path_to_Check].
 
-Remark: - Set the EffArg_Required to the number of mandatory arguments.
-        - Set Max_Help_Items to the maximun items in the head sections.
+    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 arg4 arg5 /t
 
-Reference: - A thorough reference to Windows CMD commands can be found at: https://ss64.com/nt/
-           - https://ss64.com/ also provides references of Linux, macOS, PowerShell, ASCII, VBScript, Tools, and Passwords.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example 2: The following command demos an [Active] run with 3 auguments, and to list the content of [C:\Program Files] specified by the [/P] optional argument.
+
+    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 "/P:C:\Program Files"
+
+Remarks:
+1. Set the EffArg_Required to the number of mandatory arguments.
+2. Set Max_Help_Items to the maximun items in the head sections.
+3. Please replace head sections with your own notes.
+
+References:
+- A thorough reference to Windows CMD commands can be found at: https://ss64.com/nt/
+- https://ss64.com/ also provides references of Linux, macOS, PowerShell, ASCII, VBScript, Tools, and Passwords.
 </pre>
 ### `save_permission.cmd` Backup a directory or a file permission to a text file.
 <pre>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Name: save_permission.cmd
-Purpose: Backup a directory or a file permission to a text file.
+*********************************************************************
+save_permission.cmd: Backup permissions of a directory or a file to a text file.
+*********************************************************************
 
-Usage: save_permission.cmd [/t or /T] [/?] source_directory_or_file destination_directory destination_file
-       Optional: /t or /T - Test run or dry run.
-       Optional: /? - Help
-       source_directory_or_file: Source file or directory which permissions to be captured.
-       destination_directory: The directory where the result will be saved.
-       destination_file: The file name to which the result will be saved.
+save_permission.cmd [/t | /T] [/?] "source_directory_or_file" "destination_directory" "destination_file"
 
-Example: The following command test run save the permission of [C:\dvlp\Library\CMD] to [C:\temp\dvlp-_-Library-_-CMD.txt]:
+  [/?]                     Optional. Show Help.
+  [/T]                     Optional. Test run or dry run without writing.
+  source_directory_or_file Source file or directory with which permissions to be captured.
+  destination_directory    The directory where the result will be saved.
+  destination_file         The file name to which the result will be saved.
 
-  C:\dvlp>save_permission.cmd C:\dvlp\Library\CMD C:\temp dvlp\Library\CMD /t
+The following command shows the process of saving the permission of [C:\dvlp\CMD] to [C:\temp\dvlp-_-CMD.txt] without create any file:
 
-  *  By default, the backslashes in the destination_file is replaced by [-_-].
-  ** The default backslash replacer can be changed by replace [-_-] with a new string in [set Backslash_Replacer=-_-].
+  C:\dvlp>save_permission.cmd C:\dvlp\CMD C:\temp dvlp\CMD /t
 
-Remark: Use the relative path of the [source_directory_or_file] as [destination_file] can help with the search later.
-Backslashes in the destination_file will be replaced by the string defined by Backslash_Replacer variable.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Remarks:
+1. By default, the backslashes in the destination_file is replaced by [-_-].
+2. The default backslash replacer can be changed by replace [-_-] with a new string in [set Backslash_Replacer=-_-].
+3. Use the relative path of the [source_directory_or_file] as [destination_file] can help with the search later.
+4. Backslashes in the destination_file will be replaced by the string defined by Backslash_Replacer variable.
 </pre>
 ### `save_permission_batch.cmd` Batch process permissions and stores by top level subdirectory
 <pre>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Name: save_permission_batch.cmd
-Purpose: Creates top level sub directories of the source_directory in the destination_directory, and batch backs up permission of subsequent sub directories to text files in coresponding sub directories.
+*********************************************************************
+save_permission_batch.cmd: Creates top level sub directories of the [source_directory] in the [destination_directory], and batch backs up permission of subsequent sub directories to text files in coresponding sub directories in the [destination_directory].
+*********************************************************************
 
-Usage: save_permission_batch.cmd [/?] [/t or /T] source_directory destination_directory
-       Optional: /? - Help
-       Optional: /t or /T - Test run or dry run.
-       source_directory - Permissions of all sub directories under this directory will be backed up to a corresponding sub directory under the destination_directory.
-       destination_directory - Permissions will be backed up to this directory.
+save_permission_batch.cmd [/?] [/T] source_directory destination_directory
 
-Example: The following command test run save the permission of sub directories of D:\ to C:\temp\D_Permissions.
+  [/?]                   Optional. Show Help.
+  [/T]                   Optional. Test run or dry run without writing.
+  source_directory       Permissions of all sub directories to be backed up.
+  destination_directory  Permissions will be backed up to this directory.
+
+The following command displays the process of saving permissions of sub directories of D:\ to C:\temp\D_Permissions without create folder or file.
 
   C:\dvlp>save_permission_batch D: C:\temp\D_Permissions /t
 
-Remark: This script calls save_permission.cmd. You must update Path_save_permission variable.
+This script calls save_permission.cmd. You must update Path_save_permission variable.
 Alternatively, you may add the path of save_permission.cmd to the Path environment variable.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 </pre>
-### `startService.cmd` Start a Windows service if it is not running.
+### `start_service.cmd` Start a Windows service if it is not running.
 <pre>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Name: startService.cmd
-Purpose: Start a Windows service if it is not running.
+*********************************************************************
+start_service.cmd: Start a Windows service if it is not running.
+*********************************************************************
 
-Usage: startService.cmd [/?] [/t or T] service_name
-       Optional: /? - Help
-       Optional: /t or /T - Test run or dry run.
+start_service.cmd [/?] [/T] service_name
 
-Example: The following command shows the status of AppReadiness.
+  [/?]          Optional. Display the Help info, defaults to FALSE.
+  [/T]          Optional. Test run or dry run, defaults to FALSE.
+  service_name  The name of a Windows service.
+
+The following command shows the status of AppReadiness.
 If the service is not running, it shows the command to start the service:
 
-  C:\dvlp>startService.cmd AppReadiness /t
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  C:\dvlp>start_service.cmd AppReadiness /t
+</pre>
+### `temp_clean_up.cmd` Remove files in [Path_to_Check] folder(s) and their subfolders that are older than [Cut_off_Days] days.
+<pre>
+*********************************************************************
+temp_clean_up.cmd: Remove files in [Path_to_Check] folder(s) and their subfolders that are older than [Cut_off_Days] days.
+*********************************************************************
+
+temp_clean_up.cmd [/?] [/T] [/D:Days] [/P:Path]
+
+  [/?]       Optional, defaults to FALSE. Display the Help info.
+  [/D:Days]  Optional, defaults to [Cut_off_Days]. Cut off days. e.g. /D:30.
+  [/P:Path]  Optional, defaults to [Path_to_Check]. Folder to be scanned and cleaned up. e.g. /P:C:\temp.
+  [/t | /T]  Optional, defaults to FALSE. Lists files meeting the criteria without deleting them.
+
+The following command scans [C:\Program Files] and display the files that are older than 30 days.
+
+  C:\dvlp>temp_clean_up.cmd /D:30 "/P:C:\Program Files" /t
+
+* It goes through subfolders recursively.
 </pre>
