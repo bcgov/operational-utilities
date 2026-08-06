@@ -2,6 +2,7 @@
 Shared operational utilities organized by folders.
 
 ## Utility index
+- [cmd](https://github.com/bcgov/operational-utilities/tree/main/cmd): Windows CMD batch scripts.
 - [fme-rest-api-v3-tools](https://github.com/bcgov/operational-utilities/tree/main/fme-rest-api-v3-tools): PowerShell scripts to access FME REST API version 3.
 - [gitea-to-github-migration](https://github.com/bcgov/operational-utilities/tree/main/gitea-to-github-migration): PowerShell scripts for batch migrating Gitea repos to GitHub, or download Gitea repos to your local drive.
 - [net-tools](https://github.com/bcgov/operational-utilities/tree/main/net-tools): Powershell scripts to query server IP and ports accessibility.
