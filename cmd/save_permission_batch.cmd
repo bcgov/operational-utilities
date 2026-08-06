@@ -39,7 +39,7 @@ set /A Effective_Args=0
 set /A EffArg_Required=2
 set Is_Test=FALSE
 set Is_Help=FALSE
-set Path_save_permission=C:\Dvlp\CMD
+set Path_save_permission=C:\Dvlp\Library\source\CMD
 set Exclusion_List="$Recycle.Bin","Recovery","System Volume Information"
 set Is_in_List=FALSE
 
@@ -197,6 +197,7 @@ Exit /B 0
 					echo.
 				) else (
 					set msg=!msg:"=!
+					set msg=!msg:'="!
 					echo !msg!
 				)
 			)
