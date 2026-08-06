@@ -1,18 +1,24 @@
 echo off
 setlocal enabledelayedexpansion
 
-set BlockDivider="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+set BlockDivider0="*********************************************************************"
+set BlockDivider1="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+set Heading_Line0="********************"
+set Heading_Line1="===================="
+set Heading_Line2="--------------------"
+
 set Name="save_permission_batch.cmd"
-set Purpose0="Creates top level sub directories of the source_directory in the destination_directory, and batch backs up permission of subsequent sub directories to text files in coresponding sub directories."
-set Usage0="save_permission_batch.cmd [/?] [/t or /T] source_directory destination_directory"
+set Purpose0="Creates top level sub directories of the [source_directory] in the [destination_directory], and batch backs up permission of subsequent sub directories to text files in coresponding sub directories in the [destination_directory]."
+REM set Usage0="."
+set Usage0="save_permission_batch.cmd [/?] [/T] source_directory destination_directory"
 rem Below are optional Help items. Comment out any item that you do not use.
-set Purpose1="."
-set Usage1="       Optional: /? - Help"
-set Usage2="       Optional: /t or /T - Test run or dry run."
-set Usage3="       source_directory - Permissions of all sub directories under this directory will be backed up to a corresponding sub directory under the destination_directory."
-set Usage4="       destination_directory - Permissions will be backed up to this directory."
-set Usage5="."
-set Example0="The following command test run save the permission of sub directories of D:\ to C:\temp\D_Permissions.
+set Usage1="."
+set Usage2="  [/?]                   Optional. Show Help."
+set Usage3="  [/T]                   Optional. Test run or dry run without writing."
+set Usage4="  source_directory       Permissions of all sub directories to be backed up."
+set Usage5="  destination_directory  Permissions will be backed up to this directory."
+set Usage6="."
+set Example0="The following command displays the process of saving permissions of sub directories of D:\ to C:\temp\D_Permissions without create folder or file."
 set Example1="."
 set Example2="  C:\dvlp>save_permission_batch D: C:\temp\D_Permissions /t"
 set Example3="."
@@ -20,12 +26,12 @@ set Remark0="This script calls save_permission.cmd. You must update Path_save_pe
 set Remark1="Alternatively, you may add the path of save_permission.cmd to the Path environment variable." 
 rem set Remark1="Set the EffArg_Required to the number of mandatory arguments."
 rem set Reference0="A thorough reference to Windows CMD commands: https://ss64.com/nt/"
-set Head_Sections=Purpose,Usage,Example,Remark
-set Max_Help_Items=0,1,2,3,4,5
+set Head_Sections=Usage,Example,Remark
+set Max_Help_Items=0,1,2,3,4,5,6,7
 
-echo %BlockDivider:"=%
+echo %BlockDivider0:"=%
 echo %Name:"=%: %Purpose0:"=%
-echo %BlockDivider:"=%
+echo %BlockDivider0:"=%
 
 REM 'shift' will process all the argument.
 set /A Arg_Count=0
@@ -33,7 +39,7 @@ set /A Effective_Args=0
 set /A EffArg_Required=2
 set Is_Test=FALSE
 set Is_Help=FALSE
-set Path_save_permission=C:\Dvlp\Library\CMD
+set Path_save_permission=C:\Dvlp\Library\source\CMD
 set Exclusion_List="$Recycle.Bin","Recovery","System Volume Information"
 set Is_in_List=FALSE
 
@@ -116,7 +122,7 @@ for /f "tokens=*" %%a in ('dir /a:d
 		set dst=!destination_directory!\%%a
 		rem stepwise is easier to read and maintain then blockwise.
 		echo.
-		echo ******************** Processing directory: [!src!] ********************
+		echo %Heading_Line0% Processing directory: [!src!] %Heading_Line0%
 
 		set SubTime_Started=!date!:!time!
 		echo [!src!] time started: !SubTime_Started!
@@ -128,14 +134,14 @@ for /f "tokens=*" %%a in ('dir /a:d
 			mkdir !dst!
 		)
 		echo.
-		echo ==================== Save root level permissions ====================
+		echo %Heading_Line1% Save root level permissions %Heading_Line1%
 		if !Is_Test! == TRUE (
 			call "%Path_save_permission%\save_permission.cmd" "!src!" "!dst!" "%%a" /t
 		) else (
 			call "%Path_save_permission%\save_permission.cmd" "!src!" "!dst!" "%%a"
 		)
 		echo.
-		echo ------------------- Save sub directory Permissions -------------------
+		echo %Heading_Line2% Save sub directory Permissions %Heading_Line2%
 		echo Root: [!src!]
 		if !Is_Test! == TRUE (
 			forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "@relpath" /t) else (echo Escape file: @path)"
@@ -151,10 +157,10 @@ for /f "tokens=*" %%a in ('dir /a:d
 echo off
 
 echo.
-echo %BlockDivider:"=%
+echo %Heading_Line0:"=%***  Total Time Elapsed  ****%Heading_Line0:"=%
 echo [!source_directory!] Time started: %Time_Started%
 echo [!source_directory!] Time finished: !date!:!time!
-echo %BlockDivider:"=%
+echo %BlockDivider1:"=%
 
 endlocal
 echo on
@@ -181,8 +187,8 @@ Exit /B 0
 
 :MSG_Help
 	echo.
-	echo %BlockDivider:"=%
-	echo Name: %Name:"=% 
+	REM echo %BlockDivider1:"=%
+	REM echo Name: %Name:"=% 
 	for %%a in (%Head_Sections%) do (
 		for %%i in (%Max_Help_Items%) do (
 			if defined %%~a%%i (
@@ -191,14 +197,10 @@ Exit /B 0
 					echo.
 				) else (
 					set msg=!msg:"=!
-					if %%i==0 (
-						echo %%~a: !msg!
-					) else (
-						echo !msg!
-					)
+					echo !msg!
 				)
 			)
 		)
 	)
-	echo %BlockDivider:"=%
+	REM echo %BlockDivider1:"=%
 Exit /B 0
