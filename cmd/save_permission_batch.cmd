@@ -27,7 +27,7 @@ set Remark1="Alternatively, you may add the path of save_permission.cmd to the P
 rem set Remark1="Set the EffArg_Required to the number of mandatory arguments."
 rem set Reference0="A thorough reference to Windows CMD commands: https://ss64.com/nt/"
 set Head_Sections=Usage,Example,Remark
-set Max_Help_Items=0,1,2,3,4,5,6,7
+set Max_Help_Items=0,1,2,3,4,5,6
 
 echo %BlockDivider0:"=%
 echo %Name:"=%: %Purpose0:"=%
@@ -39,7 +39,7 @@ set /A Effective_Args=0
 set /A EffArg_Required=2
 set Is_Test=FALSE
 set Is_Help=FALSE
-set Path_save_permission=C:\Dvlp\Library\source\CMD
+set Path_save_permission=C:\Dvlp\CMD
 set Exclusion_List="$Recycle.Bin","Recovery","System Volume Information"
 set Is_in_List=FALSE
 
