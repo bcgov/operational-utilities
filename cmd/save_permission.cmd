@@ -1,35 +1,35 @@
 echo off
 setlocal enabledelayedexpansion
 
-set BlockDivider="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+set BlockDivider0="*********************************************************************"
 set Name="save_permission.cmd"
-set Purpose0="Backup a directory or a file permission to a text file."
+set Purpose0="Backup permissions of a directory or a file to a text file."
 rem Below are optional Help items. Delete or comment out any item that you do not use.
-set Purpose1="."
-set Usage0="save_permission.cmd [/t or /T] [/?] source_directory_or_file destination_directory destination_file"
-set Usage1="       Optional: /t or /T - Test run or dry run."
-set Usage2="       Optional: /? - Help"
-set Usage3="       source_directory_or_file: Source file or directory which permissions to be captured.
-set Usage4="       destination_directory: The directory where the result will be saved.
-set Usage5="       destination_file: The file name to which the result will be saved.
-set Usage6="."
-set Example0="The following command test run save the permission of [C:\dvlp\Library\CMD] to [C:\temp\dvlp-_-Library-_-CMD.txt]:"
+set Usage0="save_permission.cmd [/t | /T] [/?] 'source_directory_or_file' 'destination_directory' 'destination_file'"
+set Usage1="."
+set Usage2="  [/?]                     Optional. Show Help."
+set Usage3="  [/T]                     Optional. Test run or dry run without writing."
+set Usage4="  source_directory_or_file Source file or directory with which permissions to be captured."
+set Usage5="  destination_directory    The directory where the result will be saved."
+set Usage6="  destination_file         The file name to which the result will be saved."
+set Usage7="."
+set Example0="The following command shows the process of saving the permission of [C:\dvlp\CMD] to [C:\temp\dvlp-_-CMD.txt] without create any file:"
 set Example1="."
-set Example2="  C:\dvlp>save_permission.cmd C:\dvlp\Library\CMD C:\temp dvlp\Library\CMD /t"
+set Example2="  C:\dvlp>save_permission.cmd C:\dvlp\CMD C:\temp dvlp\CMD /t"
 set Example3="."
-set Example4="  *  By default, the backslashes in the destination_file is replaced by [-_-]."
-set Example5="  ** The default backslash replacer can be changed by replace [-_-] with a new string in [set Backslash_Replacer=-_-]."
-set Example6="."
-set Remark0="Use the relative path of the [source_directory_or_file] as [destination_file] can help with the search later."
-set Remark1="Backslashes in the destination_file will be replaced by the string defined by Backslash_Replacer variable."
+set Remark0="Remarks:"
+set Remark1="1. By default, the backslashes in the destination_file is replaced by [-_-]."
+set Remark2="2. The default backslash replacer can be changed by replace [-_-] with a new string in [set Backslash_Replacer=-_-]."
+set Remark3="3. Use the relative path of the [source_directory_or_file] as [destination_file] can help with the search later."
+set Remark4="4. Backslashes in the destination_file will be replaced by the string defined by Backslash_Replacer variable."
 rem set Remark0="Set the EffArg_Required to the number of mandatory arguments."
 rem set Reference0="A thorough reference to Windows CMD commends: https://ss64.com/nt/"
-set Head_Sections=Purpose,Usage,Example,Remark
-set Max_Help_Items=0,1,2,3,4,5,6
+set Head_Sections=Usage,Example,Remark
+set Max_Help_Items=0,1,2,3,4,5,6,7
 
-echo %BlockDivider:"=%
+echo %BlockDivider0:"=%
 echo %Name:"=%: %Purpose0:"=%
-echo %BlockDivider:"=%
+echo %BlockDivider0:"=%
 
 REM 'shift' will process all the argument.
 set /A Arg_Count=0
@@ -142,8 +142,8 @@ Exit /B 0
 
 :MSG_Help
 	echo.
-	echo %BlockDivider:"=%
-	echo Name: %Name:"=% 
+	REM echo %BlockDivider1:"=%
+	REM echo Name: %Name:"=% 
 	for %%a in (%Head_Sections%) do (
 		for %%i in (%Max_Help_Items%) do (
 			if defined %%~a%%i (
@@ -152,14 +152,11 @@ Exit /B 0
 					echo.
 				) else (
 					set msg=!msg:"=!
-					if %%i==0 (
-						echo %%~a: !msg!
-					) else (
-						echo !msg!
-					)
+					set msg=!msg:'="!
+					echo !msg!
 				)
 			)
 		)
 	)
-	echo %BlockDivider:"=%
+	REM echo %BlockDivider1:"=%
 Exit /B 0
