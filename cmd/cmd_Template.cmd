@@ -150,6 +150,7 @@ Exit /B 0
 					echo.
 				) else (
 					set msg=!msg:"=!
+					set msg=!msg:'="!
 					echo !msg!
 					REM if %%i==0 (
 						REM echo %%~a: !msg!
