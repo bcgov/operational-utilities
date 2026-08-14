@@ -7,7 +7,8 @@
 ### `cmd_template.cmd` A template to process Windows CMD batch commends arguments.<a id='cmd_template'></a>
 <pre>
 *********************************************************************
-cmd_template.cmd: A template to process Windows CMD batch commends arguments.
+cmd_template.cmd:
+A template to process Windows CMD batch commends arguments.
 *********************************************************************
 
 cmd_template.cmd [/?] [/t | /T] [[/p | /P]:Path] arg1 arg2 arg3 ...
@@ -19,11 +20,11 @@ cmd_template.cmd [/?] [/t | /T] [[/p | /P]:Path] arg1 arg2 arg3 ...
   arg2             The second argument.
   arg3             The third argument.
 
-Example 1: The following command demos a [Test] run with 5 auguments, and to show the command of listing the content of the default folder set by [Path_to_Check].
+Example 1: The following command demos a [Test] run with 5 arguments, and to show the command of listing the content of the default folder set by [Path_to_Check].
 
     C:\dvlp>cmd_template.cmd arg1 arg2 arg3 arg4 arg5 /t
 
-Example 2: The following command demos an [Active] run with 3 auguments, and to list the content of [C:\Program Files] specified by the [/P] optional argument.
+Example 2: The following command demos an [Active] run with 3 arguments, and to list the content of [C:\Program Files] specified by the [/P] optional argument.
 
     C:\dvlp>cmd_template.cmd arg1 arg2 arg3 "/P:C:\Program Files"
 
@@ -39,7 +40,8 @@ References:
 ### `save_permission.cmd` Backup a directory or a file permission to a text file.<a id='save_permission'></a>
 <pre>
 *********************************************************************
-save_permission.cmd: Backup permissions of a directory or a file to a text file.
+save_permission.cmd:
+Backup permissions of a directory or a file to a text file.
 *********************************************************************
 
 save_permission.cmd [/t | /T] [/?] "source_directory_or_file" "destination_directory" "destination_file"
@@ -60,10 +62,13 @@ Remarks:
 3. Use the relative path of the [source_directory_or_file] as [destination_file] can help with the search later.
 4. Backslashes in the destination_file will be replaced by the string defined by Backslash_Replacer variable.
 </pre>
-### `save_permission_batch.cmd` Batch process permissions and stores by top level sub-directory. <a id='save_permission_batch'></a>
+### `save_permission_batch.cmd` Batch process permissions and stores by top level sub-directory (with exclusion list support). <a id='save_permission_batch'></a>
 <pre>
 *********************************************************************
-save_permission_batch.cmd: Creates top level sub directories of the [source_directory] in the [destination_directory], and batch backs up permission of subsequent sub directories to text files in coresponding sub directories in the [destination_directory].
+save_permission_batch.cmd:
+Batch backup permissions grouped by sub directories with exclusion list support.
+- Creates top level sub directories of the [source_directory] in the [destination_directory].
+- And then batch backs up permission of subsequent sub directories to text files in coresponding sub directories in the [destination_directory].
 *********************************************************************
 
 save_permission_batch.cmd [/?] [/T] source_directory destination_directory
@@ -77,13 +82,16 @@ The following command displays the process of saving permissions of sub director
 
   C:\dvlp>save_permission_batch D: C:\temp\D_Permissions /t
 
-This script calls save_permission.cmd. You must update Path_save_permission variable.
-Alternatively, you may add the path of save_permission.cmd to the Path environment variable.
+Remarks:
+1. This script calls save_permission.cmd. You must update Path_save_permission variable.
+2. Alternatively, you may add the path of save_permission.cmd to the Path environment variable.
+3. Set the Exclusion_List variable to exclude sub directories you want to escape.
 </pre>
 ### `start_service.cmd` Start a Windows service if it is not running.<a id='start_service'></a>
 <pre>
 *********************************************************************
-start_service.cmd: Start a Windows service if it is not running.
+start_service.cmd:
+Start a Windows service if it is not running.
 *********************************************************************
 
 start_service.cmd [/?] [/T] service_name
@@ -97,10 +105,11 @@ If the service is not running, it shows the command to start the service:
 
   C:\dvlp>start_service.cmd AppReadiness /t
 </pre>
-### `temp_clean_up.cmd` Remove files in [Path_to_Check] folder(s) and their subfolders that are older than [Cut_off_Days] days.<a id='temp_clean_up'></a>
+### `temp_clean_up.cmd` Remove files in [Path_to_Check] folder(s) and their sub folders that are older than [Cut_off_Days] days.<a id='temp_clean_up'></a>
 <pre>
 *********************************************************************
-temp_clean_up.cmd: Remove files in [Path_to_Check] folder(s) and their subfolders that are older than [Cut_off_Days] days.
+temp_clean_up.cmd:
+Remove files in [Path_to_Check] folder(s) and their sub folders that are older than [Cut_off_Days] days.
 *********************************************************************
 
 temp_clean_up.cmd [/?] [/T] [/D:Days] [/P:Path]
@@ -114,5 +123,5 @@ The following command scans [C:\Program Files] and display the files that are ol
 
   C:\dvlp>temp_clean_up.cmd /D:30 "/P:C:\Program Files" /t
 
-* It goes through subfolders recursively.
+* It goes through sub folders recursively.
 </pre>
