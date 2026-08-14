@@ -16,11 +16,11 @@ set Usage5="  arg1             The first argument."
 set Usage6="  arg2             The second argument."
 set Usage7="  arg3             The third argument." 
 set Usage8="."
-set Example0="Example 1: The following command demos a [Test] run with 5 auguments, and to show the command of listing the content of the default folder set by [Path_to_Check]."
+set Example0="Example 1: The following command demos a [Test] run with 5 arguments, and to show the command of listing the content of the default folder set by [Path_to_Check]."
 set Example1="."
 set Example2="    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 arg4 arg5 /t"
 set Example3="."
-set Example4="Example 2: The following command demos an [Active] run with 3 auguments, and to list the content of [C:\Program Files] specified by the [/P] optional argument."
+set Example4="Example 2: The following command demos an [Active] run with 3 arguments, and to list the content of [C:\Program Files] specified by the [/P] optional argument."
 set Example5="."
 set Example6="    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 '/P:C:\Program Files'"
 set Example7="."
@@ -36,7 +36,8 @@ set Head_Sections=Usage,Example,Remark,Reference
 set Max_Help_Items=0,1,2,3,4,5,6,7,8
 
 echo %BlockDivider0:"=%
-echo %Name:"=%: %Purpose0:"=%
+echo %Name:"=%:
+call :MSG_Lines "Purpose"
 echo %BlockDivider0:"=%
 
 set Path_to_Check="C:\dvlp"
@@ -143,23 +144,22 @@ Exit /B 0
 	REM echo %BlockDivider1:"=%
 	REM echo Name: %Name:"=% 
 	for %%a in (%Head_Sections%) do (
-		for %%i in (%Max_Help_Items%) do (
-			if defined %%~a%%i (
-				set msg=!%%~a%%i!
-				if !msg! equ "." (
-					echo.
-				) else (
-					set msg=!msg:"=!
-					set msg=!msg:'="!
-					echo !msg!
-					REM if %%i==0 (
-						REM echo %%~a: !msg!
-					REM ) else (
-						REM echo !msg!
-					REM )
-				)
+		call :MSG_Lines "%%~a"
+	)
+	REM echo %BlockDivider1:"=%
+Exit /B 0
+
+:MSG_Lines
+	for %%i in (%Max_Help_Items%) do (
+		if defined %~1%%i (
+			set msg=!%~1%%i!
+			if !msg! equ "." (
+				echo.
+			) else (
+				set msg=!msg:"=!
+				set msg=!msg:'="!
+				echo !msg!
 			)
 		)
 	)
-	REM echo %BlockDivider1:"=%
 Exit /B 0
