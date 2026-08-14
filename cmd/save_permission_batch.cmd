@@ -8,7 +8,9 @@ set Heading_Line1="===================="
 set Heading_Line2="--------------------"
 
 set Name="save_permission_batch.cmd"
-set Purpose0="Creates top level sub directories of the [source_directory] in the [destination_directory], and batch backs up permission of subsequent sub directories to text files in coresponding sub directories in the [destination_directory]."
+set Purpose0="Batch backup permissions grouped by sub directories with exclusion list support."
+set Purpose1="- Creates top level sub directories of the [source_directory] in the [destination_directory].
+set Purpose2="- And then batch backs up permission of subsequent sub directories to text files in coresponding sub directories in the [destination_directory]."
 REM set Usage0="."
 set Usage0="save_permission_batch.cmd [/?] [/T] source_directory destination_directory"
 rem Below are optional Help items. Comment out any item that you do not use.
@@ -22,15 +24,18 @@ set Example0="The following command displays the process of saving permissions o
 set Example1="."
 set Example2="  C:\dvlp>save_permission_batch D: C:\temp\D_Permissions /t"
 set Example3="."
-set Remark0="This script calls save_permission.cmd. You must update Path_save_permission variable."
-set Remark1="Alternatively, you may add the path of save_permission.cmd to the Path environment variable." 
+set Remark0="Remarks:"
+set Remark1="1. This script calls save_permission.cmd. You must update Path_save_permission variable."
+set Remark2="2. Alternatively, you may add the path of save_permission.cmd to the Path environment variable." 
+set Remark3="3. Set the Exclusion_List variable to exclude sub directories you want to escape."
 rem set Remark1="Set the EffArg_Required to the number of mandatory arguments."
 rem set Reference0="A thorough reference to Windows CMD commands: https://ss64.com/nt/"
 set Head_Sections=Usage,Example,Remark
 set Max_Help_Items=0,1,2,3,4,5,6
 
 echo %BlockDivider0:"=%
-echo %Name:"=%: %Purpose0:"=%
+echo %Name:"=%:
+call :MSG_Lines "Purpose"
 echo %BlockDivider0:"=%
 
 REM 'shift' will process all the argument.
@@ -190,18 +195,22 @@ Exit /B 0
 	REM echo %BlockDivider1:"=%
 	REM echo Name: %Name:"=% 
 	for %%a in (%Head_Sections%) do (
-		for %%i in (%Max_Help_Items%) do (
-			if defined %%~a%%i (
-				set msg=!%%~a%%i!
-				if !msg! equ "." (
-					echo.
-				) else (
-					set msg=!msg:"=!
-					set msg=!msg:'="!
-					echo !msg!
-				)
+		call :MSG_Lines "%%~a"
+	)
+	REM echo %BlockDivider1:"=%
+Exit /B 0
+
+:MSG_Lines
+	for %%i in (%Max_Help_Items%) do (
+		if defined %~1%%i (
+			set msg=!%~1%%i!
+			if !msg! equ "." (
+				echo.
+			) else (
+				set msg=!msg:"=!
+				set msg=!msg:'="!
+				echo !msg!
 			)
 		)
 	)
-	REM echo %BlockDivider1:"=%
 Exit /B 0
