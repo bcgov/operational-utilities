@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 set BlockDivider0="*********************************************************************"
 REM set BlockDivider1="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 set Name="temp_clean_up.cmd"
-set Purpose0="Remove files in [Path_to_Check] folder(s) and their subfolders that are older than [Cut_off_Days] days."
+set Purpose0="Remove files in [Path_to_Check] folder(s) and their sub folders that are older than [Cut_off_Days] days."
 rem Below are optional Help items. Delete or comment out any item that you do not use.
 rem use "." to insert a blank line.
 set Usage0="temp_clean_up.cmd [/?] [/T] [/D:Days] [/P:Path]"
@@ -18,7 +18,7 @@ set Example0="The following command scans [C:\Program Files] and display the fil
 set Example1="."
 set Example2="  C:\dvlp>temp_clean_up.cmd /D:30 '/P:C:\Program Files' /t"
 set Example3="."
-set Remark0="* It goes through subfolders recursively."
+set Remark0="* It goes through sub folders recursively."
 set Remark1="."
 rem set Reference0="- A thorough reference to Windows CMD commands can be found at: https://ss64.com/nt/"
 rem set Reference1="           - https://ss64.com/ also provides references of Linux, macOS, PowerShell, ASCII, VBScript, Tools, and Passwords."
@@ -26,7 +26,8 @@ set Head_Sections=Usage,Example,Remark
 set Max_Help_Items=0,1,2,3,4,5,6
 
 echo %BlockDivider0:"=%
-echo %Name:"=%: %Purpose0:"=%
+echo %Name:"=%:
+call :MSG_Lines "Purpose"
 echo %BlockDivider0:"=%
 
 set /A Cut_off_Days=90
@@ -139,18 +140,22 @@ Exit /B 0
 	REM echo %BlockDivider1:"=%
 	REM echo Name: %Name:"=% 
 	for %%a in (%Head_Sections%) do (
-		for %%i in (%Max_Help_Items%) do (
-			if defined %%~a%%i (
-				set msg=!%%~a%%i!
-				if !msg! equ "." (
-					echo.
-				) else (
-					set msg=!msg:"=!
-					set msg=!msg:'="!
-					echo !msg!
-				)
+		call :MSG_Lines "%%~a"
+	)
+	REM echo %BlockDivider1:"=%
+Exit /B 0
+
+:MSG_Lines
+	for %%i in (%Max_Help_Items%) do (
+		if defined %~1%%i (
+			set msg=!%~1%%i!
+			if !msg! equ "." (
+				echo.
+			) else (
+				set msg=!msg:"=!
+				set msg=!msg:'="!
+				echo !msg!
 			)
 		)
 	)
-	REM echo %BlockDivider1:"=%
 Exit /B 0
