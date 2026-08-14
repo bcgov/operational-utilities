@@ -28,7 +28,8 @@ set Head_Sections=Usage,Example,Remark
 set Max_Help_Items=0,1,2,3,4,5,6,7
 
 echo %BlockDivider0:"=%
-echo %Name:"=%: %Purpose0:"=%
+echo %Name:"=%:
+call :MSG_Lines "Purpose"
 echo %BlockDivider0:"=%
 
 REM 'shift' will process all the argument.
@@ -145,18 +146,22 @@ Exit /B 0
 	REM echo %BlockDivider1:"=%
 	REM echo Name: %Name:"=% 
 	for %%a in (%Head_Sections%) do (
-		for %%i in (%Max_Help_Items%) do (
-			if defined %%~a%%i (
-				set msg=!%%~a%%i!
-				if !msg! equ "." (
-					echo.
-				) else (
-					set msg=!msg:"=!
-					set msg=!msg:'="!
-					echo !msg!
-				)
+		call :MSG_Lines "%%~a"
+	)
+	REM echo %BlockDivider1:"=%
+Exit /B 0
+
+:MSG_Lines
+	for %%i in (%Max_Help_Items%) do (
+		if defined %~1%%i (
+			set msg=!%~1%%i!
+			if !msg! equ "." (
+				echo.
+			) else (
+				set msg=!msg:"=!
+				set msg=!msg:'="!
+				echo !msg!
 			)
 		)
 	)
-	REM echo %BlockDivider1:"=%
 Exit /B 0
