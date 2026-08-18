@@ -8,13 +8,20 @@
 <pre>
 *********************************************************************
 cmd_template.cmd:
-A template to process Windows CMD batch commends arguments.
+A template to process Windows CMD batch command arguments, which covers:
+- Mandatory arguments.
+- Optional arguments with default value.
+- Static variables, use %variable_name% reference.
+- Mutable variables, must enabledelayedexpansion, and use !variable_name! reference.
+- Loops.
+- Sub routine/function.
+- Standard script heading, and help sections.
 *********************************************************************
 
 cmd_template.cmd [/?] [/t | /T] [[/p | /P]:Path] arg1 arg2 arg3 ...
 
-  [/?]             Optional. Display the Help info, defaults to FALSE
-  [/t | /T]        Optional. Test run or dry run, defaults to FALSE
+  [/?]             Optional. Display the Help info, defaults to [Is_Help].
+  [/t | /T]        Optional. Test run or dry run, defaults to [Is_Test].
   [[/p | /P]:Path] Optional. Path to a directory. e.g. /P:C:\dvlp\temp. Defaults to [Path_to_Check].
   arg1             The first argument.
   arg2             The second argument.
@@ -29,9 +36,10 @@ Example 2: The following command demos an [Active] run with 3 arguments, and to 
     C:\dvlp>cmd_template.cmd arg1 arg2 arg3 "/P:C:\Program Files"
 
 Remarks:
-1. Set the EffArg_Required to the number of mandatory arguments.
-2. Set Max_Help_Items to the maximun items in the head sections.
-3. Please replace head sections with your own notes.
+1. Set [EffArg_Required] to the number of mandatory arguments.
+2. Set [Max_Help_Items] to the maximun items in the head sections.
+3. Set [Head_Sections] to include only sections you are using.
+4. Please replace head sections with your own notes.
 
 References:
 - A thorough reference to Windows CMD commands can be found at: https://ss64.com/nt/
