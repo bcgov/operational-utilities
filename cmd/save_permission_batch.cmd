@@ -3,7 +3,7 @@ setlocal enabledelayedexpansion
 
 set BlockDivider0="*********************************************************************"
 set BlockDivider1="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-set Heading_Line0="********************"
+set Heading_Line0="####################"
 set Heading_Line1="===================="
 set Heading_Line2="--------------------"
 
@@ -127,7 +127,7 @@ for /f "tokens=*" %%a in ('dir /a:d
 		set dst=!destination_directory!\%%a
 		rem stepwise is easier to read and maintain then blockwise.
 		echo.
-		echo %Heading_Line0% Processing directory: [!src!] %Heading_Line0%
+		echo %Heading_Line0:"=% Processing directory: [!src!] %Heading_Line0:"=%
 
 		set SubTime_Started=!date!:!time!
 		echo [!src!] time started: !SubTime_Started!
@@ -139,14 +139,14 @@ for /f "tokens=*" %%a in ('dir /a:d
 			mkdir !dst!
 		)
 		echo.
-		echo %Heading_Line1% Save root level permissions %Heading_Line1%
+		echo %Heading_Line1:"=% Save root level permissions %Heading_Line1:"=%
 		if !Is_Test! == TRUE (
 			call "%Path_save_permission%\save_permission.cmd" "!src!" "!dst!" "%%a" /t
 		) else (
 			call "%Path_save_permission%\save_permission.cmd" "!src!" "!dst!" "%%a"
 		)
 		echo.
-		echo %Heading_Line2% Save sub directory Permissions %Heading_Line2%
+		echo %Heading_Line2:"=% Save sub directory Permissions %Heading_Line2:"=%
 		echo Root: [!src!]
 		if !Is_Test! == TRUE (
 			forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "@relpath" /t) else (echo Escape file: @path)"
