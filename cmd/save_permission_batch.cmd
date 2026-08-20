@@ -9,7 +9,7 @@ set Heading_Line2="--------------------"
 
 set Name="save_permission_batch.cmd"
 set Purpose0="Batch backup permissions grouped by sub directories with exclusion list support."
-set Purpose1="- Creates top level sub directories of the [source_directory] in the [destination_directory].
+set Purpose1="- Creates top level sub directories of the [source_directory] in the [destination_directory]."
 set Purpose2="- And then batch backs up permission of subsequent sub directories to text files in coresponding sub directories in the [destination_directory]."
 REM set Usage0="."
 set Usage0="save_permission_batch.cmd [/?] [/T] source_directory destination_directory"
