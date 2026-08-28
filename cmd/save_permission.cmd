@@ -1,57 +1,79 @@
 echo off
 setlocal enabledelayedexpansion
 
-set BlockDivider0="*********************************************************************"
 set Name="save_permission.cmd"
-set Purpose0="Backup permissions of a directory or a file to a text file."
+
+set Block_Divider_0="*********************************************************************"
+set Block_Divider_1="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+rem Configue Info Sections
+set /A Max_Section_Items=7
+set Optional_Info_Sections=Usage,Example,Remark
+
+rem Clear info sections inherited from the caller.
+call :Unset_Info_Sections Purpose
+for %%s in (Optional_Info_Sections) do (
+	call :Unset_Info_Sections %%~s
+)
+
+rem Set info sections
+set Purpose0="Backup permissions of a folder or a file to a text file."
+
 rem Below are optional Help items. Delete or comment out any item that you do not use.
-set Usage0="save_permission.cmd [/t | /T] [/?] 'source_directory_or_file' 'destination_directory' 'destination_file'"
+set Usage0="save_permission.cmd [/BR:Backslash_Replacer] [/T] [/?] 'source_folder_or_file' 'destination_folder' 'destination_file'"
 set Usage1="."
 set Usage2="  [/?]                     Optional. Show Help."
-set Usage3="  [/T]                     Optional. Test run or dry run without writing."
-set Usage4="  source_directory_or_file Source file or directory with which permissions to be captured."
-set Usage5="  destination_directory    The directory where the result will be saved."
-set Usage6="  destination_file         The file name to which the result will be saved."
-set Usage7="."
-set Example0="The following command shows the process of saving the permission of [C:\dvlp\CMD] to [C:\temp\dvlp-_-CMD.txt] without create any file:"
+set Usage3="  [/BR:Backslash_Replacer] Optional. The string to replace backslashes in the [destination_file]. Defaults to [[_]] (without brackets)."
+set Usage4="  [/T]                     Optional. Test run or dry run without writing."
+set Usage5="  source_folder_or_file    Source file or folder with which permissions to be captured."
+set Usage6="  destination_folder       The folder where the result will be saved."
+set Usage7="  destination_file         The file name to which the result will be saved."
+set Usage8="."
+
+set Example0="The following command shows the process of saving the permission of [C:\dvlp\CMD] to [C:\temp\dvlp[_]CMD.txt] without create any file:"
 set Example1="."
 set Example2="  C:\dvlp>save_permission.cmd C:\dvlp\CMD C:\temp dvlp\CMD /t"
 set Example3="."
-set Remark0="Remarks:"
-set Remark1="1. By default, the backslashes in the destination_file is replaced by [-_-]."
-set Remark2="2. The default backslash replacer can be changed by replace [-_-] with a new string in [set Backslash_Replacer=-_-]."
-set Remark3="3. Use the relative path of the [source_directory_or_file] as [destination_file] can help with the search later."
-set Remark4="4. Backslashes in the destination_file will be replaced by the string defined by Backslash_Replacer variable."
-rem set Remark0="Set the EffArg_Required to the number of mandatory arguments."
-rem set Reference0="A thorough reference to Windows CMD commends: https://ss64.com/nt/"
-set Head_Sections=Usage,Example,Remark
-set Max_Help_Items=0,1,2,3,4,5,6,7
 
-echo %BlockDivider0:"=%
+set Remark0="Remarks:"
+set Remark1="1. Backslashes in the [destination_file] will be replaced by the string defined by [Backslash_Replacer] variable. E.g. [dvlp\CMD] will become [dvlp[_]CMD]."
+set Remark2="2. The default backslash replacer is set through the [set Backslash_Replacer] variable, which can be replaced by [/BR:Backslash_Replacer] argument at runtime."
+set Remark3="3. Use the relative path of the [source_folder_or_file] as [destination_file] can help with the search later."
+rem set Remark0="Set the EffArg_Required to the number of mandatory arguments."
+
+rem set Reference0="A thorough reference to Windows CMD commends: https://ss64.com/nt/"
+
+echo %Block_Divider_0:"=%
 echo %Name:"=%:
 call :MSG_Lines "Purpose"
-echo %BlockDivider0:"=%
+echo %Block_Divider_0:"=%
 
-REM 'shift' will process all the argument.
 set /A Arg_Count=0
 set /A Effective_Args=0
 set /A EffArg_Required=3
 set Is_Test=FALSE
 set Is_Help=FALSE
-set Is_RemoveDot=FALSE
-set Backslash_Replacer=-_-
+set Backslash_Replacer=[_]
+rem set Is_RemoveDot=FALSE
 rem set delimiter=""
 rem set unexpected_args=""
 
-rem echo args: %*
+rem echo args: %*echo %Block_Divider_1:"=%
+echo [All arguments]:          %*
 
 :arg_loop
 if "%~1"=="" goto end_arg_loop
 	set /a Arg_Count+=1
 	set Is_Effective=TRUE
+	set tmp_arg=%~1
 	rem echo argument !Arg_Count!: %~1
 	rem /I          Do a case Insensitive string comparison.
-	if /I "%~1" == "/t" (
+	if /I "!tmp_arg:~0,3!" == "/BR" (
+		set Backslash_Replacer=!tmp_arg:~4!
+		set Is_Effective=FALSE
+	)
+	
+	if /I "%~1" == "/T" (
 		set Is_Test=TRUE
 		set Is_Effective=FALSE
 	)
@@ -68,8 +90,8 @@ if "%~1"=="" goto end_arg_loop
 			echo Source_name: !source_name!
 		)
 		if !Effective_Args! == 2 (
-			set backup_directory=%~1
-			echo backup_directory: !backup_directory!
+			set backup_folder=%~1
+			echo backup_folder: !backup_folder!
 		)
 		if !Effective_Args! == 3 (
 			set backup_file=%~1
@@ -83,6 +105,7 @@ if "%~1"=="" goto end_arg_loop
 			rem echo !unexpected_args!
 		)
 	)
+REM 'shift' will process all the argument.
 shift
 goto arg_loop
 :end_arg_loop
@@ -100,8 +123,9 @@ if not !Is_Help!==TRUE (
 )
 
 if !Is_Help!==TRUE (
+	echo %Block_Divider_1:"=%
 	call :MSG_Help
-	exit /b 0
+	goto The_Exit
 )
 
 rem Remove leading ".\":
@@ -109,30 +133,48 @@ if "!backup_file:~0,2!" equ ".\" (
 	set backup_file=!backup_file:~2!
 )
 rem Replace backslashes:
-set backup_file=!backup_file:\=%Backslash_Replacer%!
+call :Replace_Backslath !Backslash_Replacer!
 rem Add default extention:
-if "!backup_file:~-4,1!" neq "." (
+if /I "!backup_file:~-4,4!" neq ".txt" (
 	set backup_file=!backup_file!.txt
 )
-echo backup_file: !backup_file!
+
+if defined Backslash_Replacer (
+	echo [Backslash Replacer]:     !Backslash_Replacer!
+)
+echo [backup_file]: !backup_file!
+echo %Block_Divider_1:"=%
+echo.
 
 rem Capture the permission:
 if !Is_Test!==TRUE (
 	echo.
 	echo Running mode [Active/Test]: Test.
-	echo save_permission cmd: icacls "!source_name!" /save "!backup_directory!\!backup_file!"
+	echo save_permission cmd: icacls "!source_name!" /save "!backup_folder!\!backup_file!"
 	icacls "!source_name!"
 	echo.
 ) else (
 	echo.
 	echo Running mode [Active/Test]: Active.
-	icacls "!source_name!" /save "!backup_directory!\!backup_file!"
+	icacls "!source_name!" /save "!backup_folder!\!backup_file!"
 	echo.
 )
 
+rem the Exit point of the batch CMD.
+:The_Exit
 endlocal
 echo on
 exit /B %errorlevel%
+
+:Replace_Backslath
+	set backup_file=!backup_file:\=%1!
+Exit /B 0
+
+:Unset_Info_Sections
+	for /L %%i in (0,1,%Max_Section_Items%) do (
+		set "%~1%%i="
+	)
+Exit /B 0
 
 :MSG_EffectiveArgs
 	echo.
@@ -145,14 +187,14 @@ Exit /B 0
 	echo.
 	REM echo %BlockDivider1:"=%
 	REM echo Name: %Name:"=% 
-	for %%a in (%Head_Sections%) do (
+	for %%a in (%Optional_Info_Sections%) do (
 		call :MSG_Lines "%%~a"
 	)
 	REM echo %BlockDivider1:"=%
 Exit /B 0
 
 :MSG_Lines
-	for %%i in (%Max_Help_Items%) do (
+	for /L %%i in (0,1,%Max_Section_Items%) do (
 		if defined %~1%%i (
 			set msg=!%~1%%i!
 			if !msg! equ "." (
