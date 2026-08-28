@@ -1,54 +1,65 @@
 echo off
 setlocal enabledelayedexpansion
 
-set Block_Divider_0="*********************************************************************"
-REM set Block_Divider_1="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-
 set Name="cmd_template.cmd"
 
-rem Info section configuration
-set Info_Sections=Usage,Example,Remark,Reference
-set Max_Section_Items=0,1,2,3,4,5,6,7,8
+set Block_Divider_0="*********************************************************************"
+set Block_Divider_1="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
-rem Info Section - Purpose
+rem *** Info Section Configuration ***
+rem * Delete or comment out any item that you do not use.
+rem * use "." to insert a blank line.
+rem **********************************
+rem Configue Info Sections
+set /A Max_Section_Items=10
+set Optional_Info_Sections=Usage,Example,Remark,Reference
+
+rem When called by a parent batch CMD, variables defined in the parent process may stay. So, clear All!
+call :Unset_Info_Sections Purpose
+for %%s in (Optional_Info_Sections) do (
+	call :Unset_Info_Sections %%~s
+)
+
+rem Info Section - Purpose (Used in the Batch CMD heading)
 set Purpose0="A template to process Windows CMD batch command arguments, which covers:"
 set Purpose1="- Mandatory arguments."
 set Purpose2="- Optional arguments with default values."
-set Purpose3="- Static variables, use %%variable_name%% reference."
-set Purpose4="- Mutable variables, must enabledelayedexpansion, and use ^!variable_name^! reference."
-set Purpose5="- Loops."
-set Purpose6="- Sub routine/function."
-set Purpose7="- Standard script heading and info sections."
-
-rem Below are optional Help items. Delete or comment out any item that you do not use.
-rem use "." to insert a blank line.
+set Purpose3="- Static variables, use %%variable_name%% to reference."
+set Purpose4="- Mutable variables, must enabledelayedexpansion, and use ^!variable_name^! to reference."
+set Purpose5="- Unset or undefine variables."
+set Purpose5="- List: Define a list, add an item to the list at run time."
+set Purpose6="- Loops: Loop through arguments, a list, a range of numbers."
+set Purpose7="- Sub routine/function: Define and call with arguments."
+set Purpose8="- Standard script heading and info sections."
+set Purpose9="."
+set Purpose10="The template lists the content specified by the [Path_List] variable and the optional argument [/ADD:Path]."
 
 rem Info Section - Usage
-set Usage0="cmd_template.cmd [/?] [/t | /T] [[/p | /P]:Path] arg1 arg2 arg3 ..."
+set Usage0="cmd_template.cmd [/?] [/t | /T] [[/add | /ADD]:Path] arg1 arg2 arg3 ..."
 set Usage1="."
 set Usage2="  [/?]             Optional. Display the Help info, defaults to [Is_Help]."
 set Usage3="  [/t | /T]        Optional. Test run or dry run, defaults to [Is_Test]."
-set Usage4="  [[/p | /P]:Path] Optional. Path to a directory. e.g. /P:C:\dvlp\temp. Defaults to [Path_to_Check]."
+set Usage4="  [[/add | /ADD]:Path] Optional. Path to a directory. e.g. /ADD:C:\dvlp\temp. Will be added to the [Path_List] if specified."
 set Usage5="  arg1             The first argument."
 set Usage6="  arg2             The second argument."
 set Usage7="  arg3             The third argument." 
 set Usage8="."
 
 rem Info Section - Example
-set Example0="Example 1: The following command demos a [Test] run with 5 arguments, and to show the command of listing the content of the default folder set by [Path_to_Check]."
+set Example0="Example 1: The following command demos a [Test] run with 5 arguments, and to show the command of listing the content of the default folder(s) set by [Path_List]."
 set Example1="."
 set Example2="    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 arg4 arg5 /t"
 set Example3="."
-set Example4="Example 2: The following command demos an [Active] run with 3 arguments, and to list the content of [C:\Program Files] specified by the [/P] optional argument."
+set Example4="Example 2: The following command demos an [Active] run with 3 arguments, and to list the content of the default folder(s) set by [Path_List] plus the content specified by the [/ADD] optional argument."
 set Example5="."
-set Example6="    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 '/P:C:\Program Files'"
+set Example6="    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 '/ADD:C:\Program Files'"
 set Example7="."
 
 rem Info Section - Remark
 set Remark0="Remarks:"
 set Remark1="1. Set [EffArg_Required] to the number of mandatory arguments."
-set Remark2="2. Set [Max_Section_Items] to the maximun items in the Info sections."
-set Remark3="3. Set [Info_Sections] to include only sections you are using."
+set Remark2="2. Set [Max_Section_Items] to the maximun items of the Info sections."
+set Remark3="3. Set [Optional_Info_Sections] to include only sections you are using."
 set Remark4="4. Please replace Info sections with your own notes."
 set Remark5="."
 
@@ -56,6 +67,7 @@ rem Info Section - Reference
 set Reference0="References:"
 set Reference1="- A thorough reference to Windows CMD commands can be found at: https://ss64.com/nt/"
 set Reference2="- https://ss64.com/ also provides references of Linux, macOS, PowerShell, ASCII, VBScript, Tools, and Passwords."
+set Reference3="- https://stackoverflow.com/questions/48623165/null-variable-in-a-bat-window-batch-file"
 
 rem Batch CMD heading
 echo %Block_Divider_0:"=%
@@ -69,7 +81,7 @@ set /A EffArg_Required=3
 rem Set default values
 set Is_Test=FALSE
 set Is_Help=FALSE
-set Path_to_Check="C:\dvlp"
+set Path_List="C:\dvlp","C:\temp"
 
 rem Initialization
 set /A Arg_Count=0
@@ -87,6 +99,8 @@ REM ) else (
 	REM echo arguments: %*
 REM )
 
+echo %Block_Divider_1:"=%
+echo [All arguments]: %*
 
 rem Loop through Arguments
 :arg_loop
@@ -104,12 +118,12 @@ if "%~1"=="" goto end_arg_loop
 	)
 	
 	rem use /I for a case Insensitive string comparison.
-	if /I "!tmp_arg:~0,2!" == "/p" (
-		set Path_to_Check=!tmp_arg:~3!
+	if /I "!tmp_arg:~0,4!" == "/ADD" (
+		set Path_to_Add=!tmp_arg:~5!
 		set Is_Effective=FALSE
 	)
 	
-	if /I "!tmp_arg!" == "/t" (
+	if /I "!tmp_arg!" == "/T" (
 		set Is_Test=TRUE
 		set Is_Effective=FALSE
 	)
@@ -147,27 +161,50 @@ if not !Is_Help!==TRUE (
 
 rem Display the help message if is requested or the number of passed-in mandatory arguments is less than the required number of mandatory arguments.
 if !Is_Help!==TRUE (
+	echo %Block_Divider_1:"=%
 	call :MSG_Help
 	goto The_Exit
 )
 
+echo [Original Path List]: %Path_List%
+echo [Path to Be Added]: !Path_to_Add!
+if defined Path_to_Add (
+	set Path_List=%Path_List%,"!Path_to_Add!"
+)
+echo [Effective Path List]: !Path_List!
+
+echo %Block_Divider_1:"=%
+echo.
+
 rem Actual Tasks Handling
-if !Is_Test!==TRUE (
-	echo.
-	echo Running mode [Active/Test]: Test.
-	echo DIR "!Path_to_Check:"=!"
-	echo.
-) else (
-	echo.
-	echo Running mode [Active/Test]: Active.
-	DIR "!Path_to_Check:"=!"
-	echo.
+for %%a in (!Path_List!) do (
+	call :List_Directory !Is_Test! %%a
 )
 
 rem the Exit point of the batch CMD.
 :The_Exit
 endlocal
 echo on
+Exit /B 0
+
+:List_Directory
+if %1==TRUE (
+	echo.
+	echo Running mode [Active/Test]: Test.
+	echo DIR "%~2"
+	echo.
+) else (
+	echo.
+	echo Running mode [Active/Test]: Active.
+	DIR "%~2"
+	echo.
+)
+Exit /B 0
+
+:Unset_Info_Sections
+	for /L %%i in (0,1,%Max_Section_Items%) do (
+		set "%~1%%i="
+	)
 Exit /B 0
 
 rem Show number of mandatory arguments mismatching info
@@ -184,7 +221,7 @@ rem Show help message sections
 	echo.
 	REM echo %Block_Divider_1:"=%
 	REM echo Name: %Name:"=% 
-	for %%a in (%Info_Sections%) do (
+	for %%a in (%Optional_Info_Sections%) do (
 		call :MSG_Lines "%%~a"
 	)
 	REM echo %Block_Divider_1:"=%
@@ -192,7 +229,7 @@ Exit /B 0
 
 rem Process and show one message section
 :MSG_Lines
-	for %%i in (%Max_Section_Items%) do (
+	for /L %%i in (0,1,%Max_Section_Items%) do (
 		if defined %~1%%i (
 			set msg=!%~1%%i!
 			if !msg! equ "." (
