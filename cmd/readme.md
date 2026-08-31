@@ -10,40 +10,47 @@
 cmd_template.cmd:
 A template to process Windows CMD batch command arguments, which covers:
 - Mandatory arguments.
-- Optional arguments with default value.
-- Static variables, use %variable_name% reference.
-- Mutable variables, must enabledelayedexpansion, and use !variable_name! reference.
-- Loops.
-- Sub routine/function.
-- Standard script heading, and help sections.
-*********************************************************************
+- Optional arguments with default values.
+- Static variables, use %variable_name% to reference.
+- Mutable variables, must enabledelayedexpansion, and use !variable_name! to reference.
+- List: Define a list, add an item to the list at run time.
+- Loops: Loop through arguments, a list, a range of numbers.
+- Sub routine/function: Define and call with arguments.
+- Standard script heading and info sections.
 
-cmd_template.cmd [/?] [/t | /T] [[/p | /P]:Path] arg1 arg2 arg3 ...
+The template lists the content specified by the [Path_List] variable and the optional argument [/ADD:Path].
+*********************************************************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[All arguments]: /?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+cmd_template.cmd [/?] [/t | /T] [[/add | /ADD]:Path] arg1 arg2 arg3 ...
 
   [/?]             Optional. Display the Help info, defaults to [Is_Help].
   [/t | /T]        Optional. Test run or dry run, defaults to [Is_Test].
-  [[/p | /P]:Path] Optional. Path to a directory. e.g. /P:C:\dvlp\temp. Defaults to [Path_to_Check].
+  [[/add | /ADD]:Path] Optional. Path to a directory. e.g. /ADD:C:\dvlp\temp. Will be added to the [Path_List] if specified.
   arg1             The first argument.
   arg2             The second argument.
   arg3             The third argument.
 
-Example 1: The following command demos a [Test] run with 5 arguments, and to show the command of listing the content of the default folder set by [Path_to_Check].
+Example 1: The following command demos a [Test] run with 5 arguments, and to show the command of listing the content of the default folder(s) set by [Path_List].
 
     C:\dvlp>cmd_template.cmd arg1 arg2 arg3 arg4 arg5 /t
 
-Example 2: The following command demos an [Active] run with 3 arguments, and to list the content of [C:\Program Files] specified by the [/P] optional argument.
+Example 2: The following command demos an [Active] run with 3 arguments, and to list the content of the default folder(s) set by [Path_List] plus the content specified by the [/ADD] optional argument.
 
-    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 "/P:C:\Program Files"
+    C:\dvlp>cmd_template.cmd arg1 arg2 arg3 "/ADD:C:\Program Files"
 
 Remarks:
 1. Set [EffArg_Required] to the number of mandatory arguments.
-2. Set [Max_Help_Items] to the maximun items in the head sections.
-3. Set [Head_Sections] to include only sections you are using.
-4. Please replace head sections with your own notes.
+2. Set [Max_Section_Items] to the maximun items of the Info sections.
+3. Set [Optional_Info_Sections] to include only sections you are using.
+4. Please replace Info sections with your own notes.
 
 References:
 - A thorough reference to Windows CMD commands can be found at: https://ss64.com/nt/
 - https://ss64.com/ also provides references of Linux, macOS, PowerShell, ASCII, VBScript, Tools, and Passwords.
+- https://stackoverflow.com/questions/48623165/null-variable-in-a-bat-window-batch-file
 </pre>
 ### `save_permission.cmd` Backup a directory or a file permission to a text file.<a id='save_permission'></a>
 <pre>
@@ -74,26 +81,33 @@ Remarks:
 <pre>
 *********************************************************************
 save_permission_batch.cmd:
-Batch backup permissions grouped by sub directories with exclusion list support.
-- Creates top level sub directories of the [source_directory] in the [destination_directory].
-- And then batch backs up permission of subsequent sub directories to text files in coresponding sub directories in the [destination_directory].
+Batch backup permissions grouped by sub folders with exclusion list support.
+- Create the [destination_path].
+- Creates top level sub folders of the [source_path] in the [destination_path].
+- And then batch backs up permission of subsequent sub folders to text files in coresponding sub folders in the [destination_path].
+- Folders specified in [Exclusion_List] variable are excluded.
+- An additional folder can be added to the [Exclusion_List] through the argument [/EX:path] at the runtime.
 *********************************************************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[All arguments]: /?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-save_permission_batch.cmd [/?] [/T] source_directory destination_directory
+save_permission_batch.cmd [/?] [/T] [/EX:path] source_path destination_path
 
-  [/?]                   Optional. Show Help.
-  [/T]                   Optional. Test run or dry run without writing.
-  source_directory       Permissions of all sub directories to be backed up.
-  destination_directory  Permissions will be backed up to this directory.
+  [/?]              Optional. Show Help.
+  [/T]              Optional. Test run or dry run without writing.
+  [/EX:path]        Optional. Additional excluded path.
+  source_path       Permissions of all sub folders to be backed up.
+  destination_path  Permissions will be backed up to this path.
 
-The following command displays the process of saving permissions of sub directories of D:\ to C:\temp\D_Permissions without create folder or file.
+The following command displays the process of saving permissions of sub folders of D:\, excluding folders specified by [Exclusion_List] and D:\temp specified by [/EX:temp], to C:\temp\D_Permissions without create folder or file.
 
-  C:\dvlp>save_permission_batch D: C:\temp\D_Permissions /t
+  C:\dvlp>save_permission_batch D: C:\temp\D_Permissions /EX:temp /t
 
 Remarks:
 1. This script calls save_permission.cmd. You must update Path_save_permission variable.
 2. Alternatively, you may add the path of save_permission.cmd to the Path environment variable.
-3. Set the Exclusion_List variable to exclude sub directories you want to escape.
+3. Set the Exclusion_List variable to exclude sub folders you want to escape.
 </pre>
 ### `start_service.cmd` Start a Windows service if it is not running.<a id='start_service'></a>
 <pre>
