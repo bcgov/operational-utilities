@@ -10,26 +10,27 @@ set Heading_Line_1="===================="
 set Heading_Line_2="--------------------"
 
 rem Configue Info Sections
-set /A Max_Section_Items=8
+set /A Max_Section_Items=9
 set Optional_Info_Sections=Usage,Example,Remark
 
 rem Set info sections
 set Purpose0="Batch backup permissions grouped by sub folders with exclusion list support."
-set Purpose1="- Create the [destination_path]."
-set Purpose2="- Creates top level sub folders of the [source_path] in the [destination_path]."
-set Purpose3="- And then batch backs up permission of subsequent sub folders to text files in coresponding sub folders in the [destination_path]."
+set Purpose1="- Create the [Backup_Path]."
+set Purpose2="- Creates top level sub folders of the [Source_Path] in the [Backup_Path]."
+set Purpose3="- And then batch backs up permission of subsequent sub folders to text files in coresponding sub folders in the [Backup_Path]."
 set Purpose4="- Folders specified in [Exclusion_List] variable are excluded."
 set Purpose5="- An additional folder can be added to the [Exclusion_List] through the argument [/EX:path] at the runtime."
 
-set Usage0="save_permission_batch.cmd [/?] [/T] [/BR:Backslash_Replacer] [/EX:path] source_path destination_path"
+set Usage0="save_permission_batch.cmd [/?] [/T] [/BR:Backslash_Replacer] [/EX:Path_to_Exclude] [/TE:Text_Extension] Source_Path Backup_Path"
 set Usage1="."
 set Usage2="  [/?]                     Optional. Show Help."
 set Usage3="  [/T]                     Optional. Test run or dry run without writing."
 set Usage4="  [/BR:Backslash_Replacer] Optional. The string to replace backslashes in the destination file."
-set Usage5="  [/EX:path]               Optional. Additional excluded path."
-set Usage6="  source_path              Permissions of all sub folders to be backed up."
-set Usage7="  destination_path         Permissions will be backed up to this path."
-set Usage8="."
+set Usage5="  [/EX:Path_to_Exclude]    Optional. Additional excluded path."
+set Usage6="  [/TE:Text_Extension]     Optional. The text file extention for the output [Destination_File]. Defaults to 'txt'."
+set Usage7="  Source_Path              Permissions of all sub folders to be backed up."
+set Usage8="  Backup_Path              Permissions will be backed up to this path."
+set Usage9="."
 
 set Example0="The following command displays the process of saving permissions of sub folders of [D:\], excluding folders specified by [Exclusion_List] and [D:\temp] specified by [/EX:temp], to [C:\temp\D_Permissions] without create folder or file."
 set Example1="."
@@ -40,6 +41,7 @@ set Remark0="Remarks:"
 set Remark1="1. This script calls [save_permission.cmd]. You must update [Path_save_permission] variable."
 set Remark2="2. Alternatively, you may add the path of [save_permission.cmd] to the Path environment variable." 
 set Remark3="3. Set the [Exclusion_List] variable to exclude sub folders you want to escape."
+set Remark4="4. The default exporting text file extension is set through the [Text_Extension] variable, which can be overwritten by [/TE:Text_Extension] argument at runtime.
 rem set Remark1="Set the EffArg_Required to the number of mandatory arguments."
 
 rem set Reference0="A thorough reference to Windows CMD commands: https://ss64.com/nt/"
@@ -57,6 +59,7 @@ set Is_Help=FALSE
 set Path_save_permission=C:\Dvlp\Library\source\CMD
 set Exclusion_List="$Recycle.Bin","Recovery","System Volume Information"
 set Is_in_List=FALSE
+set Text_Extension=txt
 
 echo %Block_Divider_1:"=%
 echo [All arguments]:          %*
@@ -78,10 +81,17 @@ if "%~1"=="" goto end_arg_loop
 		set Path_to_Exclude=!tmp_arg:~4!
 		set Is_Effective=FALSE
 	)
+	
+	if /I "!tmp_arg:~0,3!" == "/TE" (
+		set Text_Extension=!tmp_arg:~4!
+		set Is_Effective=FALSE
+	)
+
 	if /I "%~1" == "/T" (
 		set Is_Test=TRUE
 		set Is_Effective=FALSE
 	)
+	
 	if "%~1" == "/?" (
 		set Is_Help=TRUE
 		set Is_Effective=FALSE
@@ -91,10 +101,10 @@ if "%~1"=="" goto end_arg_loop
 		set /A Effective_Args+=1
 		rem echo Effective Args: !Effective_Args!
 		if !Effective_Args! == 1 (
-			set source_path=%~1
+			set Source_Path=%~1
 		)
 		if !Effective_Args! == 2 (
-			set destination_path=%~1
+			set Backup_Path=%~1
 		)
 		if !Effective_Args! GTR %EffArg_Required% (
 			if "!unexpected_args!" GTR "" (
@@ -135,36 +145,48 @@ if defined Path_to_Exclude (
 )
 
 rem Trim ending "\".
-if "!source_path:~-1!" equ "\" (
-	set source_path=!source_path:~0,-1!
+if "!Source_Path:~-1!" equ "\" (
+	set Source_Path=!Source_Path:~0,-1!
 )
-if "!destination_path:~-1!" equ "\" (
-	set destination_path=!destination_path:~0,-1!
+if "!Backup_Path:~-1!" equ "\" (
+	set Backup_Path=!Backup_Path:~0,-1!
 )
 
-echo [Batch source root]:      !source_path!
-echo [Batch destination root]: !destination_path!
+echo [Batch source root]:      !Source_Path!
+echo [Batch destination root]: !Backup_Path!
 echo [Exclusion List]:         !Exclusion_List!
 if defined Backslash_Replacer (
 	echo [Backslash Replacer]:     !Backslash_Replacer!
 )
+echo [Backup File Extension]:  !Text_Extension!
 echo %Block_Divider_1:"=%
 echo.
 
-echo Create destination root: [!destination_path!]
+echo Create destination root: [!Backup_Path!]
 if !Is_Test! == TRUE (
-	echo mkdir !destination_path!
+	echo mkdir !Backup_Path!
 ) else (
-	mkdir !destination_path!
+	mkdir !Backup_Path!
+)
+echo.
+
+set source_tree_file=!Source_Path::=_!
+set source_tree_file=Tree_!source_tree_file:\=[_]!.!Text_Extension!
+echo Store Source Tree to: [!source_tree_file!]
+if !Is_Test! == TRUE (
+	set tmp_str="tree !Source_Path! > !Backup_Path!\!source_tree_file!"
+	echo !tmp_str:"=!
+) else (
+	tree !Source_Path! > !Backup_Path!\!source_tree_file!
 )
 echo.
 
 set Time_Started=%date%:%time%
-echo [!source_path!] Time started: %Time_Started%
+echo [!Source_Path!] Time started: %Time_Started%
 
 rem *** Batch Processing ***
-for /f "tokens=*" %%a in ('dir /a:d /b !source_path!\') do (
-	set src=!source_path!\%%a
+for /f "tokens=*" %%a in ('dir /a:d /b !Source_Path!\') do (
+	set src=!Source_Path!\%%a
 	echo.
 	echo %Heading_Line_0:"=% Processing Folder: [!src!] %Heading_Line_0:"=%
 	call :Test_Membership "%%a"
@@ -172,7 +194,7 @@ for /f "tokens=*" %%a in ('dir /a:d /b !source_path!\') do (
 		echo [%%a] is excluded.
 		echo.
 	) else (
-		set dst=!destination_path!\%%a
+		set dst=!Backup_Path!\%%a
 		rem stepwise is easier to read and maintain then blockwise.
 
 		set SubTime_Started=!date!:!time!
@@ -187,26 +209,27 @@ for /f "tokens=*" %%a in ('dir /a:d /b !source_path!\') do (
 		echo.
 		echo %Heading_Line_1:"=% Save root level permissions %Heading_Line_1:"=%
 		rem Insert "." infront of the file name to bring it up to the top.
-		set root_file=".%%~a"
+		set root_file="%%~a"
 		if !Is_Test! == TRUE (
-			call "%Path_save_permission%\save_permission.cmd" "!src!" "!dst!" !root_file! /t
+			call "%Path_save_permission%\save_permission.cmd" "!src!" "!dst!" !root_file! /te:!Text_Extension! /t
 		) else (
-			call "%Path_save_permission%\save_permission.cmd" "!src!" "!dst!" !root_file!
+			call "%Path_save_permission%\save_permission.cmd" "!src!" "!dst!" !root_file! /te:!Text_Extension!
 		)
 		echo.
 		echo %Heading_Line_2:"=% Save Sub Folder Permissions %Heading_Line_2:"=%
 		echo Root: [!src!]
+		set root_file=!root_file:"=!
 		if !Is_Test! == TRUE (
 			if defined Backslash_Replacer (
-				forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "@relpath" /t /br:!Backslash_Replacer!) else (echo Escape file: @path)"
+				forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "!root_file!\@relpath" /br:!Backslash_Replacer! /te:!Text_Extension! /t) else (echo Escape file: @path)"
 			) else (
-				forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "@relpath" /t) else (echo Escape file: @path)"
+				forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "!root_file!\@relpath" /te:!Text_Extension! /t) else (echo Escape file: @path)"
 			)
 		) else (
 			if defined Backslash_Replacer (
-				forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "@relpath" /br:!Backslash_Replacer!) else (echo Escape file: @path)"
+				forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "!root_file!\@relpath" /br:!Backslash_Replacer! /te:!Text_Extension!) else (echo Escape file: @path)"
 			) else (
-				forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "@relpath") else (echo Escape file: @path)"
+				forfiles /p "!src!" /s /c "cmd /C if @isdir == TRUE (call "%Path_save_permission%\save_permission.cmd" "@path" "!dst!" "!root_file!\@relpath" /te:!Text_Extension!) else (echo Escape file: @path)"
 			)
 		)
 		echo.
@@ -219,8 +242,8 @@ echo off
 
 echo.
 echo %Heading_Line_0:"=%***  Total Time Elapsed  ****%Heading_Line_0:"=%
-echo [!source_path!] Time started: %Time_Started%
-echo [!source_path!] Time finished: !date!:!time!
+echo [!Source_Path!] Time started: %Time_Started%
+echo [!Source_Path!] Time finished: !date!:!time!
 echo %Block_Divider_1:"=%
 
 rem the Exit point of the batch CMD.
