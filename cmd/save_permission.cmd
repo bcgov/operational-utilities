@@ -7,7 +7,7 @@ set Block_Divider_0="***********************************************************
 set Block_Divider_1="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 rem Configue Info Sections
-set /A Max_Section_Items=7
+set /A Max_Section_Items=9
 set Optional_Info_Sections=Usage,Example,Remark
 
 rem Clear info sections inherited from the caller.
@@ -20,25 +20,27 @@ rem Set info sections
 set Purpose0="Backup permissions of a folder or a file to a text file."
 
 rem Below are optional Help items. Delete or comment out any item that you do not use.
-set Usage0="save_permission.cmd [/BR:Backslash_Replacer] [/T] [/?] 'source_folder_or_file' 'destination_folder' 'destination_file'"
+set Usage0="save_permission.cmd [/?] [/T] [/BR:Backslash_Replacer] [/TE:Text_Extension] 'Source_Folder_or_File' 'Destination_Folder' 'Destination_File'"
 set Usage1="."
 set Usage2="  [/?]                     Optional. Show Help."
-set Usage3="  [/BR:Backslash_Replacer] Optional. The string to replace backslashes in the [destination_file]. Defaults to [[_]] (without brackets)."
-set Usage4="  [/T]                     Optional. Test run or dry run without writing."
-set Usage5="  source_folder_or_file    Source file or folder with which permissions to be captured."
-set Usage6="  destination_folder       The folder where the result will be saved."
-set Usage7="  destination_file         The file name to which the result will be saved."
-set Usage8="."
+set Usage3="  [/T]                     Optional. Test run or dry run without writing."
+set Usage4="  [/BR:Backslash_Replacer] Optional. The string to replace backslashes in the [Destination_File]. Defaults to '[_]'."
+set Usage5="  [/TE:Text_Extension]     Optional. The text file extention for the output [Destination_File]. Defaults to 'txt'."
+set Usage6="  Source_Folder_or_File    Source file or folder with which permissions to be captured."
+set Usage7="  Destination_Folder       The folder where the result will be saved."
+set Usage8="  Destination_File         The file name to which the result will be saved."
+set Usage9="."
 
-set Example0="The following command shows the process of saving the permission of [C:\dvlp\CMD] to [C:\temp\dvlp[_]CMD.txt] without create any file:"
+set Example0="The following command shows the process of saving the permission of 'C:\dvlp\CMD' to 'C:\temp\dvlp[_]CMD.txt' without create any file:"
 set Example1="."
 set Example2="  C:\dvlp>save_permission.cmd C:\dvlp\CMD C:\temp dvlp\CMD /t"
 set Example3="."
 
 set Remark0="Remarks:"
-set Remark1="1. Backslashes in the [destination_file] will be replaced by the string defined by [Backslash_Replacer] variable. E.g. [dvlp\CMD] will become [dvlp[_]CMD]."
-set Remark2="2. The default backslash replacer is set through the [set Backslash_Replacer] variable, which can be replaced by [/BR:Backslash_Replacer] argument at runtime."
-set Remark3="3. Use the relative path of the [source_folder_or_file] as [destination_file] can help with the search later."
+set Remark1="1. Backslashes in the [Destination_File] will be replaced by the string defined by [Backslash_Replacer] variable, defaults to '[_]'. E.g. 'dvlp\CMD' will become 'dvlp[_]CMD'."
+set Remark2="2. The default backslash replacer is set through the [Backslash_Replacer] variable, which can be overwritten by [/BR:Backslash_Replacer] argument at runtime."
+set Remark3="3. The default exporting text file extension is set through the [Text_Extension] variable, which can be overwritten by [/TE:Text_Extension] argument at runtime.
+set Remark4="4. Use the relative path of the [Source_Folder_or_File] as [Destination_File] can help with the search later."
 rem set Remark0="Set the EffArg_Required to the number of mandatory arguments."
 
 rem set Reference0="A thorough reference to Windows CMD commends: https://ss64.com/nt/"
@@ -54,11 +56,12 @@ set /A EffArg_Required=3
 set Is_Test=FALSE
 set Is_Help=FALSE
 set Backslash_Replacer=[_]
+set Text_Extension=txt
 rem set Is_RemoveDot=FALSE
 rem set delimiter=""
 rem set unexpected_args=""
 
-rem echo args: %*echo %Block_Divider_1:"=%
+echo %Block_Divider_1:"=%
 echo [All arguments]:          %*
 
 :arg_loop
@@ -73,10 +76,16 @@ if "%~1"=="" goto end_arg_loop
 		set Is_Effective=FALSE
 	)
 	
+	if /I "!tmp_arg:~0,3!" == "/TE" (
+		set Text_Extension=!tmp_arg:~4!
+		set Is_Effective=FALSE
+	)
+
 	if /I "%~1" == "/T" (
 		set Is_Test=TRUE
 		set Is_Effective=FALSE
 	)
+	
 	if "%~1" == "/?" (
 		set Is_Help=TRUE
 		set Is_Effective=FALSE
@@ -86,14 +95,17 @@ if "%~1"=="" goto end_arg_loop
 		set /A Effective_Args+=1
 		rem echo Effective Args: !Effective_Args!
 		if !Effective_Args! == 1 (
+			rem Source_Folder_or_File
 			set source_name=%~1
-			echo Source_name: !source_name!
+			echo [Source Name]:           !source_name!
 		)
 		if !Effective_Args! == 2 (
+			rem Destination_Folder
 			set backup_folder=%~1
-			echo backup_folder: !backup_folder!
+			echo [Backup Folder]:         !backup_folder!
 		)
 		if !Effective_Args! == 3 (
+			rem Destination_File
 			set backup_file=%~1
 		)
 		if !Effective_Args! GTR %EffArg_Required% (
@@ -128,21 +140,23 @@ if !Is_Help!==TRUE (
 	goto The_Exit
 )
 
-rem Remove leading ".\":
-if "!backup_file:~0,2!" equ ".\" (
-	set backup_file=!backup_file:~2!
-)
+rem Remove ".\":
+set backup_file=!backup_file:.\=!
+rem Remove """
+set backup_file=!backup_file:"=!
+
 rem Replace backslashes:
 call :Replace_Backslath !Backslash_Replacer!
 rem Add default extention:
-if /I "!backup_file:~-4,4!" neq ".txt" (
-	set backup_file=!backup_file!.txt
+if /I "!backup_file:~-4,4!" neq ".!Text_Extension!" (
+	set backup_file=!backup_file!.!Text_Extension!
 )
 
 if defined Backslash_Replacer (
-	echo [Backslash Replacer]:     !Backslash_Replacer!
+	echo [Backslash Replacer]:    !Backslash_Replacer!
 )
-echo [backup_file]: !backup_file!
+echo [Backup File Extension]: !Text_Extension!
+echo [Backup File]:           !backup_file!
 echo %Block_Divider_1:"=%
 echo.
 
